@@ -1,0 +1,194 @@
+$fontFamily: alipuhui, sans-serif;
+
+.form_wrap {
+    box-sizing: border-box;
+    padding: 47px 24px;
+    position: relative;
+    z-index: 1;
+    width: 355px;
+    box-sizing: border-box;
+}
+
+.name {
+    font-family: $fontFamily;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.2px;
+    color: #4d4d4d;
+    margin-bottom: 8px;
+}
+
+.fullName,
+.gender {
+    margin-bottom: 16px;
+}
+
+@mixin InputFont {
+    font-family: $fontFamily;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+    letter-spacing: 0.25px;
+}
+
+@mixin Input {
+    border: 1px solid #ebebeb;
+    border-radius: 6px;
+    font-size: 14px;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 0 16px;
+    color: #757575;
+    background-color: #fafafa;
+    line-height: 0;
+}
+
+.ipt {
+    outline: none;
+    appearance: none;
+    @include Input();
+    width: 100%;
+    @include InputFont();
+    &::placeholder {
+        color: #bdbdbd;
+    }
+}
+
+.ipt_placeholder {
+    @include InputFont();
+    color: #bdbdbd;
+}
+
+@mixin DropdownBtnInput {
+    padding: 0 25px 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-flow: row nowrap;
+    position: relative;
+}
+
+.dropdown_ipt {
+    @include Input();
+    width: 100%;
+    @include DropdownBtnInput();
+}
+
+.genderDropDownList {
+    width: calc(355px - 24px * 2);
+    height: auto;
+    background-color: #fff;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+
+.dropdown_iptIcon {
+    font-size: 10px;
+    color: #757575;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 5px;
+    margin: auto 0;
+    z-index: 5;
+    transition: all 0.15s linear;
+    &.active {
+        transform: rotate(180deg);
+    }
+}
+
+.dropDownItem {
+    height: 30px;
+    display: flex;
+    font-size: 14px;
+    font-family: $fontFamily;
+    align-items: center;
+    justify-content: flex-start;
+    flex-flow: row nowrap;
+    padding-left: 16px;
+    cursor: pointer;
+    box-sizing: border-box;
+    width: 100%;
+    &:hover {
+        background-color: rgba(34, 166, 179, 0.15);
+    }
+    &.active {
+        color: #22a6b3;
+    }
+}
+
+.birthDropdown_container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-flow: row nowrap;
+}
+
+.unit {
+    @include InputFont();
+}
+
+.birthDropdownBtn_year {
+    flex: 1 1 auto;
+    @include Input();
+    @include DropdownBtnInput();
+    margin-right: 5px;
+}
+
+.birthDropdownBtn_month {
+    width: 100px;
+    @include Input();
+    @include DropdownBtnInput();
+    margin: 0 5px;
+}
+
+@mixin DropdownContainer {
+    width: calc(calc(355px - 24px * 2) * 0.6);
+    height: auto;
+    background-color: #fff;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+
+.dropdown_monthContainer {
+    width: 100px;
+    height: auto;
+    background-color: #fff;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+
+.dropdown_yearContainer {
+    @include DropdownContainer();
+}
+
+.dropdown_yearScrollBody,
+.dropdown_monthScrollBody {
+    max-height: 200px;
+}
+
+.errorBody {
+    background-color: #fff;
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 -2px 5px 0 rgba(0, 0, 0, 0.2);
+    color: red;
+    font-family: $fontFamily;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    width: calc(355px - 24px * 2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.errorIcon {
+    color: red;
+    font-size: 14px;
+    margin-right: 5px;
+}
