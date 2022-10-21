@@ -105,7 +105,7 @@ export const DropdownBtn = forwardRef<HTMLDivElement, DropdownBtnProps>(
             setBtnIsClickFn.current = setBtnIsClick;
         }, [setBtnIsClick]);
 
-        useLayoutEffect(() => {
+        useEffect(() => {
             const event = new CustomEvent(eventName, {
                 detail: {
                     event: "changeShow",

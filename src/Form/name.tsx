@@ -16,7 +16,7 @@ import { Icon } from "../Components/Icon";
 /* <------------------------------------ **** INTERFACE START **** ------------------------------------ */
 /** This section will include all the interface for this tsx file */
 interface TempProps {
-    handleChange: (res?: string) => string;
+    handleChange: (res?: string) => void;
 }
 /* <------------------------------------ **** INTERFACE END **** ------------------------------------ */
 /* <------------------------------------ **** FUNCTION COMPONENT START **** ------------------------------------ */
@@ -63,7 +63,6 @@ const Temp: React.FC<TempProps> = ({ handleChange }) => {
                     height: "10px",
                     color: "#fff",
                 }}
-                show={visible}
             >
                 <DropdownBtn>
                     <input
@@ -77,7 +76,7 @@ const Temp: React.FC<TempProps> = ({ handleChange }) => {
                         }}
                     />
                 </DropdownBtn>
-                <DropdownContent bodyClassName="errorBody">
+                <DropdownContent bodyClassName="errorBody" show={visible}>
                     <Icon type="warning" className="errorIcon" />
                     请输入正确的姓名
                 </DropdownContent>

@@ -15,7 +15,7 @@ import { Icon } from "../Components/Icon";
 /* <------------------------------------ **** INTERFACE START **** ------------------------------------ */
 /** This section will include all the interface for this tsx file */
 interface TempProps {
-    handleChange: (res: "X" | "Y") => string;
+    handleChange: (res: "X" | "Y") => void;
 }
 /* <------------------------------------ **** INTERFACE END **** ------------------------------------ */
 /* <------------------------------------ **** FUNCTION COMPONENT START **** ------------------------------------ */

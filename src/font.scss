@@ -45,3 +45,13 @@
 .font-puhui {
     font-family: "alipuhui", sans-serif;
 }
+
+@font-face {
+    font-family: "Roboto";
+    src: url("./Font/7f1b26l.woff2") format("woff2"), url("./Font/7f1b26d.woff") format("woff"),
+        url("./Font/7f1b26a.opentype") format("opentype");
+    font-display: auto;
+    font-style: normal;
+    font-weight: 400;
+    font-stretch: normal;
+}

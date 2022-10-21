@@ -188,11 +188,10 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
             visibleChangeFn.current?.(visible);
         }, [visible]);
 
-        useEffect(() => {
+        useLayoutEffect(() => {
             const fn = (e: Event) => {
                 const event = e as CustomEvent<CustomEventAction>;
                 const eventData = event.detail;
-
                 switch (eventData.event) {
                     case "focus":
                         if (eventData.eventId === eventIdRef.current) {
@@ -452,7 +451,6 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
         };
 
         /* <------------------------------------ **** FUNCTION END **** ------------------------------------ */
-
         return (
             <Portal
                 show={visible}

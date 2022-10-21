@@ -58,7 +58,7 @@ const Temp: React.FC<TempProps> = ({ handleChange }) => {
                         {year ? (
                             <div className="ipt_value">{year}</div>
                         ) : (
-                            <div className="ipt_placeholder">请选择年</div>
+                            <div className="ipt_placeholder">请选择</div>
                         )}
                         <Icon
                             type="dropdown"
@@ -109,7 +109,7 @@ const Temp: React.FC<TempProps> = ({ handleChange }) => {
                         {month ? (
                             <div className="ipt_value">{month}</div>
                         ) : (
-                            <div className="ipt_placeholder">请选择月</div>
+                            <div className="ipt_placeholder">请选择</div>
                         )}
 
                         <Icon

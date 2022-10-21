@@ -32,6 +32,10 @@ body {
 .desk {
     width: 624px;
     height: 330px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-flow: row nowrap;
 }
 
 .mobile {
@@ -44,4 +48,104 @@ body {
     top: 0;
     left: 0;
     z-index: 0;
+}
+
+.line {
+    border-left: 1px dashed #bdbdbd;
+    width: 0;
+    height: calc(100% - 32px * 2);
+}
+
+.card_wrap {
+    width: calc(100% - 355px - 1px);
+    height: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.card_uuid {
+    color: #9197a1;
+    letter-spacing: 0.25px;
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    margin-top: 24px;
+    margin-bottom: 8px;
+}
+
+.card_row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: row nowrap;
+    margin-bottom: 12px;
+}
+
+.card_uuidName {
+    margin-right: 10px;
+}
+
+.card_name {
+    font-family: $fontFamily;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: 0.2px;
+    color: #4d4d4d;
+    margin-right: 4px;
+}
+
+.card_split {
+    width: 1px;
+    height: 12px;
+    background-color: #ebebeb;
+    margin-left: 17px;
+    margin-right: 16px;
+}
+
+.card_birth {
+    font-family: $fontFamily;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.2px;
+    color: #4d4d4d;
+}
+
+.card_btn {
+    font-family: $fontFamily;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+    width: 50px;
+    height: 26px;
+    background: #22a6b3;
+    border-radius: 4px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: row nowrap;
+    cursor: pointer;
+}
+
+.card_des {
+    font-family: $fontFamily;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 0.5px;
+    text-align: center;
+    padding: 0 17px;
+    color: #bdbdbd;
+    margin-top: 32px;
 }
