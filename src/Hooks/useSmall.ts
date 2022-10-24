@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const isSmall = () => {
-    return window.matchMedia("(max-width: 630px)").matches;
+    return window.matchMedia("(max-width: 720px)").matches;
 };
 
 export const useSmall = (): boolean => {

@@ -16,7 +16,7 @@ export const comms = new PluginComms({
 
 import { useState } from "react";
 import Canvas from "./bg";
-import Card from "./card";
+import Card from "./Card/index";
 import "./font.scss";
 import { useId } from "./Hooks/useId";
 import { useSmall } from "./Hooks/useSmall";
@@ -31,6 +31,8 @@ const Main: React.FC = () => {
 
     const id = useId();
 
+    const [imgLoading, setImgLoading] = useState(true);
+
     /* <------------------------------------ **** STATE END **** ------------------------------------ */
     /* <------------------------------------ **** PARAMETER START **** ------------------------------------ */
     /************* This section will include this component parameter *************/
@@ -44,7 +46,12 @@ const Main: React.FC = () => {
     return (
         <div className="wrapper">
             <div className={"main" + (isSmall ? " mobile" : " desk")}>
-                <Canvas isSmall={isSmall} isHalf={!show} />
+                <Canvas
+                    isSmall={isSmall}
+                    isHalf={!show}
+                    setImgLoading={setImgLoading}
+                    imgLoading={imgLoading}
+                />
                 <Form
                     submit={(res) => {
                         setShow(res);
@@ -52,7 +59,8 @@ const Main: React.FC = () => {
                     eventId={`form${id}`}
                 />
                 {show && <div className="line" />}
-                <Card eventId={`form${id}`} show={show} />
+
+                <Card eventId={`form${id}`} isSmall={isSmall} show={show} imgLoading={imgLoading} />
             </div>
         </div>
     );

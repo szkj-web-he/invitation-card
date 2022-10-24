@@ -13,3 +13,6 @@ export const encode = (res: string): string => {
 
     return res;
 };
+
+/**汉字正则 */
+export const chineseReg = /^[\u2E80-\u9FFF]+$/;

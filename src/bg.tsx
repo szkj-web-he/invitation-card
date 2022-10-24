@@ -6,9 +6,9 @@
  */
 /* <------------------------------------ **** DEPENDENCE IMPORT START **** ------------------------------------ */
 /** This section will include all the necessary dependence for this tsx file */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import bg from "./Images/bg.png";
-import { drawStrokeWhenHalf, clipWhenHalf, clipWhenFull, drawStrokeWhenFull } from "./Unit/draw";
+import { clipWhenFull, clipWhenHalf, drawStrokeWhenFull, drawStrokeWhenHalf } from "./Unit/draw";
 /* <------------------------------------ **** DEPENDENCE IMPORT END **** ------------------------------------ */
 /* <------------------------------------ **** INTERFACE START **** ------------------------------------ */
 /** This section will include all the interface for this tsx file */
@@ -23,23 +23,25 @@ interface TempProps {
      * 小屏得竖着
      */
     isSmall?: boolean;
+
+    setImgLoading: (res: boolean) => void;
+
+    imgLoading: boolean;
 }
 /* <------------------------------------ **** INTERFACE END **** ------------------------------------ */
 /* <------------------------------------ **** FUNCTION COMPONENT START **** ------------------------------------ */
-const Temp: React.FC<TempProps> = ({ isHalf, isSmall }) => {
+const Temp: React.FC<TempProps> = ({ isHalf, isSmall, setImgLoading, imgLoading }) => {
     /* <------------------------------------ **** STATE START **** ------------------------------------ */
     /************* This section will include this component HOOK function *************/
     const ref = useRef<HTMLCanvasElement | null>(null);
 
     const imgRef = useRef<HTMLImageElement | null>(null);
 
-    const [loading, setLoading] = useState(true);
-
     /* <------------------------------------ **** STATE END **** ------------------------------------ */
     /* <------------------------------------ **** PARAMETER START **** ------------------------------------ */
     /************* This section will include this component parameter *************/
     useEffect(() => {
-        if (loading) {
+        if (imgLoading) {
             return;
         }
         const imgEl = imgRef.current;
@@ -76,16 +78,16 @@ const Temp: React.FC<TempProps> = ({ isHalf, isSmall }) => {
             //  }
         } else {
             if (isHalf) {
-                clipWhenHalf(ctx, 356, height);
+                clipWhenHalf(ctx, 388, height);
                 ctx.drawImage(imgEl, 0, 0);
-                drawStrokeWhenHalf(ctx, 356, height);
+                drawStrokeWhenHalf(ctx, 388, height);
             } else {
                 clipWhenFull(ctx, width, height);
                 ctx.drawImage(imgEl, 0, 0);
                 drawStrokeWhenFull(ctx, width, height);
             }
         }
-    }, [loading, isHalf, isSmall]);
+    }, [imgLoading, isHalf, isSmall]);
 
     /* <------------------------------------ **** PARAMETER END **** ------------------------------------ */
     /* <------------------------------------ **** FUNCTION START **** ------------------------------------ */
@@ -96,11 +98,11 @@ const Temp: React.FC<TempProps> = ({ isHalf, isSmall }) => {
             <img
                 alt=""
                 src={bg}
-                onLoad={(e) => {
-                    console.log(e);
-                    setLoading(false);
+                onLoad={() => {
+                    setImgLoading(false);
                 }}
                 ref={imgRef}
+                id="bg"
                 style={{
                     width: "0",
                     height: "0",

@@ -2,10 +2,10 @@ $fontFamily: alipuhui, sans-serif;
 
 .form_wrap {
     box-sizing: border-box;
-    padding: 47px 24px;
+    padding: 56px 40px;
     position: relative;
     z-index: 1;
-    width: 355px;
+    width: 387px;
     box-sizing: border-box;
 }
 
@@ -76,7 +76,7 @@ $fontFamily: alipuhui, sans-serif;
 }
 
 .genderDropDownList {
-    width: calc(355px - 24px * 2);
+    width: calc(387px - 40px * 2);
     height: auto;
     background-color: #fff;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
@@ -145,7 +145,7 @@ $fontFamily: alipuhui, sans-serif;
 }
 
 @mixin DropdownContainer {
-    width: calc(calc(355px - 24px * 2) * 0.6);
+    width: calc(calc(387px - 40px * 2) * 0.6);
     height: auto;
     background-color: #fff;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
@@ -180,7 +180,7 @@ $fontFamily: alipuhui, sans-serif;
     font-family: $fontFamily;
     font-size: 14px;
     letter-spacing: 0.5px;
-    width: calc(355px - 24px * 2);
+    width: calc(387px - 40px * 2);
     display: flex;
     align-items: center;
     justify-content: center;

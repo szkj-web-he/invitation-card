@@ -1,83 +1,66 @@
 /**
- * @file 姓名
- * @date 2022-10-20
+ * @file
+ * @date 2022-10-24
  * @author xuejie.he
- * @lastModify xuejie.he 2022-10-20
+ * @lastModify xuejie.he 2022-10-24
  */
 /* <------------------------------------ **** DEPENDENCE IMPORT START **** ------------------------------------ */
 /** This section will include all the necessary dependence for this tsx file */
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { Dropdown } from "../Components/Dropdown/Dropdown";
 import { DropdownBtn } from "../Components/Dropdown/DropdownBtn";
 import { DropdownContent } from "../Components/Dropdown/DropdownContent";
-import { Icon } from "../Components/Icon";
-import { chineseReg } from "../Unit/encode";
+import iconHidden from "../Images/icon_hidden.png";
+import iconOpen from "../Images/icon_open.png";
 /* <------------------------------------ **** DEPENDENCE IMPORT END **** ------------------------------------ */
 /* <------------------------------------ **** INTERFACE START **** ------------------------------------ */
 /** This section will include all the interface for this tsx file */
 interface TempProps {
-    handleChange: (res?: string) => void;
+    className?: string;
+    children: React.ReactNode;
 }
 /* <------------------------------------ **** INTERFACE END **** ------------------------------------ */
 /* <------------------------------------ **** FUNCTION COMPONENT START **** ------------------------------------ */
-const Temp: React.FC<TempProps> = ({ handleChange }) => {
+const Temp: React.FC<TempProps> = ({ className, children }) => {
     /* <------------------------------------ **** STATE START **** ------------------------------------ */
     /************* This section will include this component HOOK function *************/
-    const valueRef = useRef<string>();
-
-    const [visible, setVisible] = useState(true);
-
+    const [open, setOpen] = useState(false);
     /* <------------------------------------ **** STATE END **** ------------------------------------ */
     /* <------------------------------------ **** PARAMETER START **** ------------------------------------ */
     /************* This section will include this component parameter *************/
     /* <------------------------------------ **** PARAMETER END **** ------------------------------------ */
     /* <------------------------------------ **** FUNCTION START **** ------------------------------------ */
     /************* This section will include this component general function *************/
-    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        valueRef.current = e.target.value.trim();
-    };
-
-    const handleBlur = () => {
-        const englishReg = /^[a-z]+[.' ]*[a-z]*$/i;
-        if (
-            valueRef.current &&
-            (chineseReg.test(valueRef.current) || englishReg.test(valueRef.current))
-        ) {
-            handleChange(valueRef.current);
-            setVisible(false);
-        } else {
-            handleChange();
-            setVisible(true);
-        }
-    };
-
     /* <------------------------------------ **** FUNCTION END **** ------------------------------------ */
     return (
-        <div className="fullName">
-            <div className="name">姓名</div>
+        <div className={`eye_wrap${className ? ` ${className}` : ""}`}>
+            <span className="eye_name">UUID</span>
+            <span>****************</span>
             <Dropdown
-                placement="ct"
                 triangle={{
-                    width: "20px",
-                    height: "10px",
-                    color: "#fff",
+                    width: "10px",
+                    height: "5px",
+                    color: "rgba(33,33,33,0.8)",
                 }}
+                trigger="click"
+                offset={{
+                    x: (left) => {
+                        return left + 58;
+                    },
+                }}
+                placement="rt"
             >
-                <DropdownBtn>
-                    <input
-                        type="text"
-                        placeholder="请输入姓名..."
-                        className="ipt"
-                        onInput={handleInput}
-                        onBlur={handleBlur}
-                        onFocus={() => {
-                            setVisible(false);
-                        }}
-                    />
+                <DropdownBtn className={`eye_btn${open ? " active" : ""}`}>
+                    <img src={iconHidden} alt="" className="eye_hiddenIcon" />
+                    <img src={iconOpen} className="eye_showIcon" alt="" />
                 </DropdownBtn>
-                <DropdownContent bodyClassName="errorBody" show={visible}>
-                    <Icon type="warning" className="errorIcon" />
-                    请输入正确的姓名
+                <DropdownContent
+                    bodyClassName="eye_content"
+                    handleVisibleChange={(res) => {
+                        setOpen(res);
+                    }}
+                >
+                    {children}
                 </DropdownContent>
             </Dropdown>
         </div>
