@@ -7,15 +7,13 @@
 /* <------------------------------------ **** DEPENDENCE IMPORT START **** ------------------------------------ */
 /** This section will include all the necessary dependence for this tsx file */
 import QRCode from "qrcode";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import iconBoy from "../Images/icon_boy.png";
 import iconGirl from "../Images/icon_girl.png";
 import { comms } from "../index";
-import { addZero } from "../Unit/addZero";
+import { drawRoundRect, drawSplit, insertBirth, insertDes, insertName } from "./draw";
 import Eye from "./eye";
 import "./style.scss";
-import { useLayoutEffect } from "react";
-import { drawRoundRect, drawSplit, insertBirth, insertDes, insertName } from "./draw";
 /* <------------------------------------ **** DEPENDENCE IMPORT END **** ------------------------------------ */
 /* <------------------------------------ **** INTERFACE START **** ------------------------------------ */
 /** This section will include all the interface for this tsx file */
@@ -66,8 +64,10 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
     }, [birth]);
 
     useEffect(() => {
+        let a: HTMLAnchorElement | null = null;
+        let c: HTMLCanvasElement | null = null;
         if (loading && !imgLoading && !genderLoading) {
-            const c = document.createElement("canvas");
+            c = document.createElement("canvas");
             document.body.append(c);
 
             c.setAttribute("style", "position: absolute; top: 0;left:0");
@@ -121,8 +121,22 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
                 insertBirth(ctx, birthRef.current ?? "", width / 2 + 1 + 16, genderOffset.y);
                 //插入描述
                 insertDes(ctx, width, height);
+
+                const url = c.toDataURL("image/png");
+
+                a = document.createElement("a");
+                a.href = url;
+                a.download = "card.png";
+                a.click();
+                a.remove();
+                c.remove();
+                setLoading(false);
             }
         }
+        return () => {
+            c?.remove();
+            a?.remove();
+        };
     }, [loading, imgLoading, QRCodeStatus, genderLoading]);
 
     useLayoutEffect(() => {

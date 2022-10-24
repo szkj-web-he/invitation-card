@@ -1,5 +1,4 @@
 import { comms } from "..";
-import default from './../Components/Icon/Unit/customFontIcon';
 
 /**
  * 画圆角矩形
@@ -10,6 +9,7 @@ export const drawRoundRect = (
     height: number,
 ): void => {
     ctx.beginPath();
+    ctx.fillStyle = "#fff";
     ctx.arc(width - 10, height - 10, 10, 0, Math.PI / 2);
     ctx.lineTo(10, height);
     ctx.arc(10, height - 10, 10, Math.PI / 2, Math.PI);
@@ -19,6 +19,7 @@ export const drawRoundRect = (
     ctx.arc(width - 10, 10, 10, (Math.PI / 2) * 3, Math.PI * 2);
     ctx.lineTo(width, height - 10);
     ctx.closePath();
+    ctx.fill();
     ctx.clip();
 };
 
@@ -26,6 +27,7 @@ export const drawRoundRect = (
  * 画分割线
  */
 export const drawSplit = (ctx: CanvasRenderingContext2D, width: number): void => {
+    ctx.globalAlpha = 1;
     ctx.lineWidth = 1;
     ctx.strokeStyle = "#EBEBEB";
     ctx.beginPath();
@@ -44,6 +46,7 @@ export const insertName = (
     width: number,
     height: number,
 ): void => {
+    ctx.globalAlpha = 1;
     ctx.font = "500 16px / 20px alipuhui";
     const arr = name.split("");
     ctx.fillStyle = "#4d4d4d";
@@ -65,6 +68,7 @@ export const insertBirth = (
     x: number,
     y: number,
 ): void => {
+    ctx.globalAlpha = 1;
     ctx.font = "400 14px / 20px alipuhui";
     const arr = text.split("");
     ctx.fillStyle = "#4d4d4d";
@@ -80,17 +84,17 @@ export const insertBirth = (
 /**
  * 插入描述
  */
-export const insertDes = (ctx: CanvasRenderingContext2D, width:number, height: number): void => {
+export const insertDes = (ctx: CanvasRenderingContext2D, width: number, height: number): void => {
+    ctx.globalAlpha = 1;
     ctx.font = "400 12px / 18px alipuhui";
     ctx.fillStyle = "#BDBDBD";
     const arr = comms.config.question ?? "";
 
     let sum = 0;
-    const textData:Array<{
-        default:number,
-        value:string,
-        offset:number,
-        top:number
+    const textData: Array<{
+        left: number;
+        value: string;
+        top: number;
     }> = [];
 
     /**
@@ -102,32 +106,44 @@ export const insertDes = (ctx: CanvasRenderingContext2D, width:number, height: n
      * 初始位置
      */
     let left = 40;
-    let top = height - 17- 18;
+    const top = height - 17 - 18;
     let rowWidth = 0;
-    for(let i = 0;i<arr.length;i++){
+    for (let i = 0; i < arr.length; i++) {
         const item = arr[i];
-textData.push({
-    default:left,
-    top,
-    value:item,
-    offset:0
-})
 
-         const width = ctx.measureText(item).width;
-         sum += width+0.5;
-        left += width+0.5;
-// rowWidth
-         if(sum>236){
-            for(let j = splitIndex;j<textData.length;j++){
-                textData[j].top -= 18; 
+        const { width } = ctx.measureText(item);
+        sum += 0.5 + width;
+        left += i === 0 ? width : 0.5 + width;
+        if (sum > 236) {
+            for (let j = splitIndex; j < textData.length; j++) {
+                textData[j].top -= 18;
             }
-            top += 18;
-            splitIndex = i-1;
+            splitIndex = i;
+            sum = 0;
+        }
 
-         }else{
+        if (i === splitIndex) {
+            rowWidth = width;
+            left = 40;
+        } else {
+            rowWidth += width + 0.5;
+        }
+        textData.push({
+            left,
+            top,
+            value: item,
+        });
 
-         }
-    };
+        if (i === arr.length - 1) {
+            const offset = (236 - rowWidth) / 2;
+            for (let j = splitIndex; j < textData.length; j++) {
+                textData[j].left += offset;
+            }
+        }
+    }
 
-    ctx.fillText(comms.config.question ?? "", 48, height - 40, 236);
+    for (let i = 0; i < textData.length; i++) {
+        const item = textData[i];
+        ctx.fillText(item.value, item.left, item.top);
+    }
 };
