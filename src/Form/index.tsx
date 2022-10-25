@@ -23,6 +23,10 @@ interface TempProps {
      * 通讯密钥
      */
     eventId: string;
+    /**
+     *是否是小屏
+     */
+    isSmall: boolean;
 }
 
 interface SetNameData {
@@ -46,7 +50,7 @@ interface SetBirth {
 type Action = SetNameData | SetGender | SetBirth;
 /* <------------------------------------ **** INTERFACE END **** ------------------------------------ */
 /* <------------------------------------ **** FUNCTION COMPONENT START **** ------------------------------------ */
-const Temp: React.FC<TempProps> = ({ submit, eventId }) => {
+const Temp: React.FC<TempProps> = ({ submit, eventId, isSmall }) => {
     /* <------------------------------------ **** STATE START **** ------------------------------------ */
     /************* This section will include this component HOOK function *************/
 
@@ -101,7 +105,7 @@ const Temp: React.FC<TempProps> = ({ submit, eventId }) => {
 
     /* <------------------------------------ **** FUNCTION END **** ------------------------------------ */
     return (
-        <div className="form_wrap">
+        <div className={`form_wrap${isSmall ? " form_smallWrap" : ""}`}>
             <Name
                 handleChange={(res) => {
                     setFormData({

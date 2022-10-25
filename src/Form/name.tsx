@@ -25,7 +25,7 @@ const Temp: React.FC<TempProps> = ({ handleChange }) => {
     /************* This section will include this component HOOK function *************/
     const valueRef = useRef<string>();
 
-    const [visible, setVisible] = useState(true);
+    const [visible, setVisible] = useState(false);
 
     /* <------------------------------------ **** STATE END **** ------------------------------------ */
     /* <------------------------------------ **** PARAMETER START **** ------------------------------------ */

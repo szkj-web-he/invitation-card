@@ -31,7 +31,7 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
     /************* This section will include this component HOOK function *************/
     const ref = useRef<HTMLCanvasElement | null>(null);
 
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     /**
      * 判断性别的icon是否加载完成
@@ -120,22 +120,22 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
                 //插入出生年月
                 insertBirth(ctx, birthRef.current ?? "", width / 2 + 1 + 16, genderOffset.y);
                 //插入描述
-                insertDes(ctx, width, height);
+                insertDes(ctx, width, height, 17);
 
                 const url = c.toDataURL("image/png");
 
                 a = document.createElement("a");
                 a.href = url;
                 a.download = "card.png";
-                a.click();
-                a.remove();
-                c.remove();
+                // a.click();
+                // a.remove();
+                // c.remove();
                 setLoading(false);
             }
         }
         return () => {
-            c?.remove();
-            a?.remove();
+            // c?.remove();
+            // a?.remove();
         };
     }, [loading, imgLoading, QRCodeStatus, genderLoading]);
 
@@ -152,7 +152,7 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
             ref.current,
             uuid,
             {
-                width: 160,
+                width: 120,
                 margin: 1,
             },
             (error) => {
@@ -186,8 +186,9 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
                 width="120"
                 height={120}
             />
+
+            <div className="deskCard_name">{name}</div>
             <div className="deskCard_row">
-                <div className="deskCard_name">{name}</div>
                 {gender && (
                     <img
                         src={gender === "X" ? iconBoy : iconGirl}
@@ -196,7 +197,6 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
                         onLoad={() => setGenderLoading(false)}
                     />
                 )}
-                <div className="deskCard_split" />
                 <div className="deskCard_birth">{birth}</div>
             </div>
 

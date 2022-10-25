@@ -11,6 +11,7 @@ import { comms } from "..";
 import { addZero } from "../Unit/addZero";
 import { chineseReg, encode } from "../Unit/encode";
 import Desk from "./desk";
+import Mobile from "./mobile";
 /* <------------------------------------ **** DEPENDENCE IMPORT END **** ------------------------------------ */
 /* <------------------------------------ **** INTERFACE START **** ------------------------------------ */
 /** This section will include all the interface for this tsx file */
@@ -42,7 +43,7 @@ const Temp: React.FC<TempProps> = ({ isSmall, eventId, imgLoading, show }) => {
         str += gender ?? "";
         str += year ? `${year}` : "";
         str += month ? `${month}` : "";
-        const value = `${userId}-${str}`;
+        const value = `${userId}-${str}${Date.now()}`;
         comms.state = value;
         return value;
     }, [gender, month, name, year]);
@@ -74,7 +75,13 @@ const Temp: React.FC<TempProps> = ({ isSmall, eventId, imgLoading, show }) => {
     /* <------------------------------------ **** FUNCTION END **** ------------------------------------ */
     if (show) {
         return isSmall ? (
-            <></>
+            <Mobile
+                uuid={uuid}
+                imgLoading={imgLoading}
+                name={name ?? undefined}
+                gender={gender ?? undefined}
+                birth={`${year ?? 2022}.${addZero(2, month ?? 1)}`}
+            />
         ) : (
             <Desk
                 uuid={uuid}

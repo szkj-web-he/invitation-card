@@ -39,8 +39,9 @@ body {
 }
 
 .mobile {
-    width: calc(100% - 40px);
     height: 544px;
+    width: 355px;
+    max-width: calc(100% - 40px);
 }
 
 .bg {
@@ -56,4 +57,11 @@ body {
     height: calc(100% - 32px * 2);
     position: relative;
     z-index: 2;
+    &.small {
+        border-left: 0;
+        width: calc(100% - 34px * 2);
+        height: 0;
+        border-bottom: 1px dashed #bdbdbd;
+        margin: 0 auto;
+    }
 }

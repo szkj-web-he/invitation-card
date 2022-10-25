@@ -27,7 +27,7 @@ const Main: React.FC = () => {
     /************* This section will include this component HOOK function *************/
     const isSmall = useSmall();
 
-    const [show, setShow] = useState(true);
+    const [show, setShow] = useState(false);
 
     const id = useId();
 
@@ -57,8 +57,9 @@ const Main: React.FC = () => {
                         setShow(res);
                     }}
                     eventId={`form${id}`}
+                    isSmall={isSmall}
                 />
-                {show && <div className="line" />}
+                {show && <div className={`line${isSmall ? " small" : ""}`} />}
 
                 <Card eventId={`form${id}`} isSmall={isSmall} show={show} imgLoading={imgLoading} />
             </div>

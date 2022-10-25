@@ -8,7 +8,16 @@
 /** This section will include all the necessary dependence for this tsx file */
 import React, { useEffect, useRef } from "react";
 import bg from "./Images/bg.png";
-import { clipWhenFull, clipWhenHalf, drawStrokeWhenFull, drawStrokeWhenHalf } from "./Unit/draw";
+import {
+    clipWhenFull,
+    clipWhenHalf,
+    clipWhenSmallFull,
+    clipWhenSmallHalf,
+    drawStrokeWhenFull,
+    drawStrokeWhenHalf,
+    drawStrokeWhenSmallFull,
+    drawStrokeWhenSmallHalf,
+} from "./Unit/draw";
 /* <------------------------------------ **** DEPENDENCE IMPORT END **** ------------------------------------ */
 /* <------------------------------------ **** INTERFACE START **** ------------------------------------ */
 /** This section will include all the interface for this tsx file */
@@ -58,7 +67,6 @@ const Temp: React.FC<TempProps> = ({ isHalf, isSmall, setImgLoading, imgLoading 
         }
 
         const { width, height } = parent.getBoundingClientRect();
-
         el.width = width;
         el.height = height;
 
@@ -67,25 +75,23 @@ const Temp: React.FC<TempProps> = ({ isHalf, isSmall, setImgLoading, imgLoading 
             return;
         }
         if (isSmall) {
-            //  if (isHalf) {
-            //      clipWhenHalf(ctx, 356, height);
-            //      ctx.drawImage(imgEl, 0, 0);
-            //      drawStrokeWhenHalf(ctx, 356, height);
-            //  } else {
-            //      clipWhenFull(ctx, width, height);
-            //      ctx.drawImage(imgEl, 0, 0);
-            //      drawStrokeWhenFull(ctx, width, height);
-            //  }
-        } else {
             if (isHalf) {
-                clipWhenHalf(ctx, 388, height);
+                clipWhenSmallHalf(ctx, width, 296);
                 ctx.drawImage(imgEl, 0, 0);
-                drawStrokeWhenHalf(ctx, 388, height);
+                drawStrokeWhenSmallHalf(ctx, width, 296);
             } else {
-                clipWhenFull(ctx, width, height);
+                clipWhenSmallFull(ctx, width, height);
                 ctx.drawImage(imgEl, 0, 0);
-                drawStrokeWhenFull(ctx, width, height);
+                drawStrokeWhenSmallFull(ctx, width, height);
             }
+        } else if (isHalf) {
+            clipWhenHalf(ctx, 388, height);
+            ctx.drawImage(imgEl, 0, 0);
+            drawStrokeWhenHalf(ctx, 388, height);
+        } else {
+            clipWhenFull(ctx, width, height);
+            ctx.drawImage(imgEl, 0, 0);
+            drawStrokeWhenFull(ctx, width, height);
         }
     }, [imgLoading, isHalf, isSmall]);
 
