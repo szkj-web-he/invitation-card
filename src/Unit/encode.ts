@@ -15,4 +15,4 @@ export const encode = (res: string): string => {
 };
 
 /**汉字正则 */
-export const chineseReg = /^[\u2E80-\u9FFF]+$/;
+export const chineseReg = /^[\u2E80-\u9FFF]+.*[\u2E80-\u9FFF]*$/;

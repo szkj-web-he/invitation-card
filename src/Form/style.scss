@@ -196,3 +196,32 @@ $fontFamily: alipuhui, sans-serif;
     font-size: 14px;
     margin-right: 5px;
 }
+
+.useName_wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-flow: row nowrap;
+}
+
+.lastName_ipt {
+    outline: none;
+    appearance: none;
+    @include Input();
+    @include InputFont();
+    &::placeholder {
+        color: #bdbdbd;
+    }
+    width: calc(50% - 4px);
+}
+
+.firstName_ipt {
+    outline: none;
+    appearance: none;
+    @include Input();
+    @include InputFont();
+    &::placeholder {
+        color: #bdbdbd;
+    }
+    width: calc(50% - 4px);
+}

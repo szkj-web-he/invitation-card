@@ -8,8 +8,10 @@
 /** This section will include all the necessary dependence for this tsx file */
 import React, { useLayoutEffect, useMemo, useState } from "react";
 import { comms } from "..";
+import { FormProps } from "../Form";
 import { addZero } from "../Unit/addZero";
-import { chineseReg, encode } from "../Unit/encode";
+import { encode } from "../Unit/encode";
+import { NameProps } from "./../Form/name";
 import Desk from "./desk";
 import Mobile from "./mobile";
 /* <------------------------------------ **** DEPENDENCE IMPORT END **** ------------------------------------ */
@@ -26,7 +28,7 @@ interface TempProps {
 const Temp: React.FC<TempProps> = ({ isSmall, eventId, imgLoading, show }) => {
     /* <------------------------------------ **** STATE START **** ------------------------------------ */
     /************* This section will include this component HOOK function *************/
-    const [name, setName] = useState<string | null>(null);
+    const [name, setName] = useState<NameProps | null>(null);
     /**
      * X是男
      * Y是女
@@ -39,7 +41,8 @@ const Temp: React.FC<TempProps> = ({ isSmall, eventId, imgLoading, show }) => {
     const uuid = useMemo(() => {
         const userId = comms.getRuntimeInfoNode("user_id") ?? "01GFWXVBBT553VVH1MBQRV4S9K";
         let str = "";
-        str += name && chineseReg.test(name) ? encode(name) : name ?? "";
+        str += name?.last ? encode(name.last) : "";
+        str += name?.first ? encode(name.first) : "";
         str += gender ?? "";
         str += year ? `${year}` : "";
         str += month ? `${month}` : "";
@@ -52,12 +55,7 @@ const Temp: React.FC<TempProps> = ({ isSmall, eventId, imgLoading, show }) => {
     /************* This section will include this component parameter *************/
     useLayoutEffect(() => {
         const fn = (e: Event) => {
-            const event = e as CustomEvent<{
-                name: null | string;
-                gender: null | "X" | "Y";
-                birthYear: null | number;
-                birthMonth: null | number;
-            }>;
+            const event = e as CustomEvent<FormProps>;
             setName(event.detail.name);
             setGender(event.detail.gender);
             setYear(event.detail.birthYear);
@@ -78,7 +76,7 @@ const Temp: React.FC<TempProps> = ({ isSmall, eventId, imgLoading, show }) => {
             <Mobile
                 uuid={uuid}
                 imgLoading={imgLoading}
-                name={name ?? undefined}
+                name={name?.last ?? undefined}
                 gender={gender ?? undefined}
                 birth={`${year ?? 2022}.${addZero(2, month ?? 1)}`}
             />
@@ -86,7 +84,7 @@ const Temp: React.FC<TempProps> = ({ isSmall, eventId, imgLoading, show }) => {
             <Desk
                 uuid={uuid}
                 imgLoading={imgLoading}
-                name={name ?? undefined}
+                name={name?.last ?? undefined}
                 gender={gender ?? undefined}
                 birth={`${year ?? 2022}.${addZero(2, month ?? 1)}`}
             />

@@ -16,39 +16,75 @@ import { chineseReg } from "../Unit/encode";
 /* <------------------------------------ **** INTERFACE START **** ------------------------------------ */
 /** This section will include all the interface for this tsx file */
 interface TempProps {
-    handleChange: (res?: string) => void;
+    handleChange: (res?: NameProps) => void;
+}
+
+export interface NameProps {
+    first: string;
+    last: string;
 }
 /* <------------------------------------ **** INTERFACE END **** ------------------------------------ */
 /* <------------------------------------ **** FUNCTION COMPONENT START **** ------------------------------------ */
 const Temp: React.FC<TempProps> = ({ handleChange }) => {
     /* <------------------------------------ **** STATE START **** ------------------------------------ */
     /************* This section will include this component HOOK function *************/
-    const valueRef = useRef<string>();
 
-    const [visible, setVisible] = useState(false);
+    const [firstNameVisible, setFirstNameVisible] = useState(false);
+    const firstNameVisibleRef = useRef(false);
+
+    const [lastNameVisible, setLastNameVisible] = useState(false);
+    const lastNameVisibleRef = useRef(false);
+
+    const firstNameVal = useRef<string>();
+    const lastNameVal = useRef<string>();
 
     /* <------------------------------------ **** STATE END **** ------------------------------------ */
     /* <------------------------------------ **** PARAMETER START **** ------------------------------------ */
     /************* This section will include this component parameter *************/
+
     /* <------------------------------------ **** PARAMETER END **** ------------------------------------ */
     /* <------------------------------------ **** FUNCTION START **** ------------------------------------ */
     /************* This section will include this component general function *************/
-    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        valueRef.current = e.target.value.trim();
+
+    const handleValueChange = () => {
+        if (firstNameVisibleRef.current || lastNameVisibleRef.current) {
+            handleChange();
+            return;
+        }
+        handleChange({
+            first: firstNameVal.current ?? "",
+            last: lastNameVal.current ?? "",
+        });
     };
 
-    const handleBlur = () => {
+    const handleLastNameBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        const value = e.target.value.trim();
         const englishReg = /^[a-z]+[.' ]*[a-z]*$/i;
-        if (
-            valueRef.current &&
-            (chineseReg.test(valueRef.current) || englishReg.test(valueRef.current))
-        ) {
-            handleChange(valueRef.current);
-            setVisible(false);
+        if (value && (chineseReg.test(value) || englishReg.test(value)) && value.length < 50) {
+            lastNameVal.current = value;
+            lastNameVisibleRef.current = false;
+            setLastNameVisible(false);
         } else {
-            handleChange();
-            setVisible(true);
+            lastNameVisibleRef.current = true;
+            lastNameVal.current = "";
+            setLastNameVisible(true);
         }
+        handleValueChange();
+    };
+
+    const handleFirstNameBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        const value = e.target.value.trim();
+        const englishReg = /^[a-z]+[.' ]*[a-z]*$/i;
+        if (value && (chineseReg.test(value) || englishReg.test(value)) && value.length < 50) {
+            firstNameVal.current = value;
+            firstNameVisibleRef.current = false;
+            setFirstNameVisible(false);
+        } else {
+            firstNameVisibleRef.current = true;
+            firstNameVal.current = undefined;
+            setFirstNameVisible(true);
+        }
+        handleValueChange();
     };
 
     /* <------------------------------------ **** FUNCTION END **** ------------------------------------ */
@@ -63,19 +99,32 @@ const Temp: React.FC<TempProps> = ({ handleChange }) => {
                     color: "#fff",
                 }}
             >
-                <DropdownBtn>
+                <DropdownBtn className="useName_wrap">
                     <input
                         type="text"
-                        placeholder="请输入姓名..."
-                        className="ipt"
-                        onInput={handleInput}
-                        onBlur={handleBlur}
+                        placeholder="姓氏"
+                        className="lastName_ipt"
+                        onBlur={handleLastNameBlur}
                         onFocus={() => {
-                            setVisible(false);
+                            lastNameVisibleRef.current = false;
+                            setLastNameVisible(false);
+                        }}
+                    />
+                    <input
+                        type="text"
+                        placeholder="名字"
+                        className="firstName_ipt"
+                        onBlur={handleFirstNameBlur}
+                        onFocus={() => {
+                            firstNameVisibleRef.current = false;
+                            setFirstNameVisible(false);
                         }}
                     />
                 </DropdownBtn>
-                <DropdownContent bodyClassName="errorBody" show={visible}>
+                <DropdownContent
+                    bodyClassName="errorBody"
+                    show={firstNameVisible || lastNameVisible}
+                >
                     <Icon type="warning" className="errorIcon" />
                     请输入正确的姓名
                 </DropdownContent>

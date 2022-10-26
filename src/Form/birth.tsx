@@ -75,7 +75,21 @@ const Temp: React.FC<TempProps> = ({ handleChange }) => {
                                 if (res.clientHeight + res.top >= res.scrollHeight - 34) {
                                     setYearList((pre) => {
                                         const last = pre[pre.length - 1] - 1;
+                                        if (last <= 1) {
+                                            return pre;
+                                        }
+
+                                        if (last - 10 < 1) {
+                                            const arr: number[] = [];
+
+                                            for (let i = last; i > 0; i--) {
+                                                arr.push(i);
+                                            }
+                                            return [...pre, ...arr];
+                                        }
+
                                         const arr: number[] = [];
+
                                         for (let i = last; i > last - 10; i--) {
                                             arr.push(i);
                                         }

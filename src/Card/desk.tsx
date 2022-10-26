@@ -11,7 +11,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import iconBoy from "../Images/icon_boy.png";
 import iconGirl from "../Images/icon_girl.png";
 import { comms } from "../index";
-import { drawRoundRect, drawSplit, insertBirth, insertDes, insertName } from "./draw";
+import { drawRoundRect, drawRoundRectStroke, insertBirth, insertDes, insertName } from "./draw";
 import Eye from "./eye";
 import "./style.scss";
 /* <------------------------------------ **** DEPENDENCE IMPORT END **** ------------------------------------ */
@@ -68,9 +68,9 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
         let c: HTMLCanvasElement | null = null;
         if (loading && !imgLoading && !genderLoading) {
             c = document.createElement("canvas");
-            document.body.append(c);
+            // document.body.append(c);
 
-            c.setAttribute("style", "position: absolute; top: 0;left:0");
+            // c.setAttribute("style", "position: absolute; top: 0;left:0");
 
             const width = 332;
             const height = 356;
@@ -91,6 +91,8 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
             ctx.globalAlpha = 0.5;
             ctx.drawImage(bg, 0, 0);
             ctx.globalAlpha = 1;
+            //出入背景线
+            drawRoundRectStroke(ctx, width, height);
 
             if (QRCodeStatus === 1) {
                 const node = ref.current;
@@ -99,43 +101,39 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
                 }
                 //插入二维码
                 ctx.drawImage(node, width / 2 - node.width / 2, 45);
-
-                //插入分割线
-                drawSplit(ctx, width);
-
-                const genderOffset = {
-                    x: width / 2 - genderEl.naturalWidth - 16,
-                    y: 45 + 160 + 8,
-                };
+                //插入姓名
+                const bottom = insertName(ctx, `${nameRef.current ?? ""}**`, 20, 45 + 160 + 12);
 
                 //插入性别图片
-                ctx.drawImage(
-                    genderEl,
-                    genderOffset.x,
-                    (20 - genderEl.naturalHeight) / 2 + genderOffset.y,
-                );
+                const text = birthRef.current ?? "";
+                const birthWidth = ctx.measureText(text).width + (text.split("").length - 1) * 0.2;
+                const sumWidth = birthWidth + 12 + genderEl.naturalWidth;
+                ctx.drawImage(genderEl, (width - sumWidth) / 2, bottom + 6);
 
-                //插入姓名
-                insertName(ctx, nameRef.current ?? "", genderOffset.x, genderOffset.y);
                 //插入出生年月
-                insertBirth(ctx, birthRef.current ?? "", width / 2 + 1 + 16, genderOffset.y);
+                insertBirth(
+                    ctx,
+                    text,
+                    (width - sumWidth) / 2 + genderEl.naturalWidth + 12,
+                    bottom + 8,
+                );
                 //插入描述
-                insertDes(ctx, width, height, 17);
+                insertDes(ctx, height, 17);
 
                 const url = c.toDataURL("image/png");
 
                 a = document.createElement("a");
                 a.href = url;
                 a.download = "card.png";
-                // a.click();
-                // a.remove();
-                // c.remove();
+                a.click();
+                a.remove();
+                c.remove();
                 setLoading(false);
             }
         }
         return () => {
-            // c?.remove();
-            // a?.remove();
+            c?.remove();
+            a?.remove();
         };
     }, [loading, imgLoading, QRCodeStatus, genderLoading]);
 
@@ -144,15 +142,27 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
     }, [gender]);
 
     useEffect(() => {
-        if (!ref.current) {
+        const el = document.getElementById("qr-code");
+        if (!el) {
             return;
         }
         setQRCodeStatus(0);
+        void QRCode.toCanvas(el, uuid, {
+            width: 140,
+            margin: 1,
+        });
+    }, [uuid]);
+
+    useEffect(() => {
+        setQRCodeStatus(0);
+        const c = document.createElement("canvas");
+        ref.current = c;
+
         void QRCode.toCanvas(
-            ref.current,
+            c,
             uuid,
             {
-                width: 120,
+                width: 160,
                 margin: 1,
             },
             (error) => {
@@ -164,6 +174,7 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
             },
         );
     }, [uuid]);
+
     /* <------------------------------------ **** PARAMETER END **** ------------------------------------ */
     /* <------------------------------------ **** FUNCTION START **** ------------------------------------ */
     /************* This section will include this component general function *************/
@@ -178,16 +189,16 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
             <Eye>{uuid}</Eye>
 
             <canvas
-                ref={ref}
                 style={{
                     margin: "0 auto 8px auto",
                     display: "block",
                 }}
-                width="120"
-                height={120}
+                id="qr-code"
+                width="140"
+                height={140}
             />
 
-            <div className="deskCard_name">{name}</div>
+            <div className="deskCard_name">{name}**</div>
             <div className="deskCard_row">
                 {gender && (
                     <img

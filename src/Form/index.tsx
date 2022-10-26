@@ -9,7 +9,7 @@
 import React, { useRef } from "react";
 import Birth from "./birth";
 import Gender from "./gender";
-import Name from "./name";
+import Name, { NameProps } from "./name";
 import "./style.scss";
 /* <------------------------------------ **** DEPENDENCE IMPORT END **** ------------------------------------ */
 /* <------------------------------------ **** INTERFACE START **** ------------------------------------ */
@@ -31,7 +31,10 @@ interface TempProps {
 
 interface SetNameData {
     type: "name";
-    payload?: string;
+    payload?: {
+        first: string;
+        last: string;
+    };
 }
 
 interface SetGender {
@@ -48,18 +51,21 @@ interface SetBirth {
 }
 
 type Action = SetNameData | SetGender | SetBirth;
+
+export interface FormProps {
+    name: null | NameProps;
+    gender: null | "X" | "Y";
+    birthYear: null | number;
+    birthMonth: null | number;
+}
+
 /* <------------------------------------ **** INTERFACE END **** ------------------------------------ */
 /* <------------------------------------ **** FUNCTION COMPONENT START **** ------------------------------------ */
 const Temp: React.FC<TempProps> = ({ submit, eventId, isSmall }) => {
     /* <------------------------------------ **** STATE START **** ------------------------------------ */
     /************* This section will include this component HOOK function *************/
 
-    const formData = useRef<{
-        name: null | string;
-        gender: null | "X" | "Y";
-        birthYear: null | number;
-        birthMonth: null | number;
-    }>({
+    const formData = useRef<FormProps>({
         name: null,
         gender: null,
         birthYear: null,

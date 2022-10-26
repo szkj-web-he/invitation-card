@@ -11,7 +11,13 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import iconBoy from "../Images/icon_boy.png";
 import iconGirl from "../Images/icon_girl.png";
 import { comms } from "../index";
-import { drawRoundRect, insertBirthWhenSmall, insertDes, insertNameWhenSmall } from "./draw";
+import {
+    drawRoundRect,
+    drawRoundRectStroke,
+    insertBirthWhenSmall,
+    insertDes,
+    insertNameWhenSmall,
+} from "./draw";
 import Eye from "./eye";
 import "./style.scss";
 /* <------------------------------------ **** DEPENDENCE IMPORT END **** ------------------------------------ */
@@ -69,6 +75,10 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
         if (loading && !imgLoading && !genderLoading) {
             c = document.createElement("canvas");
 
+            document.body.append(c);
+
+            c.setAttribute("style", "position: absolute; top: 0;left:0");
+
             const width = 335;
             const height = 248;
             c.width = width;
@@ -84,10 +94,11 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
             }
             //插入背景
 
-            drawRoundRect(ctx, width, height);
+            drawRoundRectWhenSmall(ctx, width, height);
             ctx.globalAlpha = 0.5;
             ctx.drawImage(bg, 0, 0);
             ctx.globalAlpha = 1;
+            drawRoundRectStrokeWhenSmall(ctx, width, height);
 
             if (QRCodeStatus === 1) {
                 const node = ref.current;
@@ -103,7 +114,7 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
                 };
 
                 //插入姓名
-                insertNameWhenSmall(ctx, nameRef.current ?? "", 20 + 120 + 12, 36 + 14);
+                insertNameWhenSmall(ctx, `${nameRef.current ?? ""}**`, 20 + 120 + 12, 36 + 14);
 
                 //插入性别图片
                 ctx.drawImage(genderEl, genderOffset.x, genderOffset.y - genderEl.naturalHeight);
@@ -117,22 +128,22 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
                 );
 
                 //插入描述
-                insertDes(ctx, width, height, 16);
+                insertDes(ctx, height, 16);
 
                 const url = c.toDataURL("image/png");
 
                 a = document.createElement("a");
                 a.href = url;
                 a.download = "card.png";
-                a.click();
-                a.remove();
-                c.remove();
+                // a.click();
+                // a.remove();
+                // c.remove();
                 setLoading(false);
             }
         }
         return () => {
-            c?.remove();
-            a?.remove();
+            // c?.remove();
+            // a?.remove();
         };
     }, [loading, imgLoading, QRCodeStatus, genderLoading]);
 
@@ -177,7 +188,7 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
                 <div className="smallCard_col">
                     <Eye className="smallCard_uuid">{uuid}</Eye>
                     <div className="smallCard_userData">
-                        <div className="smallCard_userName">{name}</div>
+                        <div className="smallCard_userName">{name}**</div>
                         <div className="smallCard_userBirthAndGender">
                             {gender && (
                                 <img
