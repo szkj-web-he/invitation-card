@@ -14,7 +14,7 @@ export const comms = new PluginComms({
     renderOnReady: (res: React.ReactNode) => void;
 };
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Canvas from "./bg";
 import Card from "./Card/index";
 import "./font.scss";
