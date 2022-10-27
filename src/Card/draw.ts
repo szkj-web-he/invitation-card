@@ -332,18 +332,18 @@ export const drawRoundRectWhenSmall = (
     ctx.fillStyle = "#fff";
     // 右下
     ctx.arc(width - 10, height - 10, 10, 0, Math.PI / 2);
-    ctx.lineTo(11, height - 1);
-    // 左下
+    ctx.lineTo(10, height);
 
-    ctx.arc(11, height - 11, 10, Math.PI / 2, Math.PI);
-    ctx.lineTo(1, 13);
+    // 左下
+    ctx.arc(10, height - 10, 10, Math.PI / 2, Math.PI);
+    ctx.lineTo(0, 12);
+
     // 左上
-    ctx.moveTo(0, 13);
-    ctx.arc(0, 0, 13, Math.PI / 2, 0, true);
-    ctx.lineTo(width - 10, 0);
+    ctx.arc(0, 0, 12, Math.PI / 2, 0, true);
+    ctx.lineTo(width - 12, 0);
 
     // 右上
-    ctx.arc(width - 10, 10, 10, (Math.PI / 2) * 3, Math.PI * 2);
+    ctx.arc(width, 0, 12, Math.PI, Math.PI / 2, true);
     ctx.lineTo(width, height - 10);
     ctx.closePath();
     ctx.fill();
@@ -354,4 +354,36 @@ export const drawRoundRectStrokeWhenSmall = (
     ctx: CanvasRenderingContext2D,
     width: number,
     height: number,
-): void => {};
+): void => {
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "#EBEBEB";
+    ctx.beginPath();
+
+    // 右下
+    ctx.arc(width - 11, height - 11, 10, 0, Math.PI / 2);
+    ctx.lineTo(11, height - 1);
+
+    // 左下
+    ctx.arc(11, height - 11, 10, Math.PI / 2, Math.PI);
+    ctx.lineTo(1, 13);
+
+    // 左上
+    ctx.moveTo(0, 13);
+    ctx.arc(0, 0, 13, Math.PI / 2, 0, true);
+    ctx.moveTo(width - 13, 0);
+
+    // 右上
+    ctx.arc(width, 0, 13, Math.PI, Math.PI / 2, true);
+    ctx.moveTo(width - 1, 13);
+    ctx.lineTo(width - 1, height - 11);
+    ctx.stroke();
+
+    // 虚线
+    ctx.strokeStyle = "#BDBDBD";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.setLineDash([5, 4]);
+    ctx.moveTo(34, 0);
+    ctx.lineTo(width - 34, 0);
+    ctx.stroke();
+};

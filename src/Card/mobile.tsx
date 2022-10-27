@@ -12,8 +12,8 @@ import iconBoy from "../Images/icon_boy.png";
 import iconGirl from "../Images/icon_girl.png";
 import { comms } from "../index";
 import {
-    drawRoundRect,
-    drawRoundRectStroke,
+    drawRoundRectStrokeWhenSmall,
+    drawRoundRectWhenSmall,
     insertBirthWhenSmall,
     insertDes,
     insertNameWhenSmall,
@@ -75,9 +75,9 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
         if (loading && !imgLoading && !genderLoading) {
             c = document.createElement("canvas");
 
-            document.body.append(c);
+            // document.body.append(c);
 
-            c.setAttribute("style", "position: absolute; top: 0;left:0");
+            // c.setAttribute("style", "position: absolute; top: 0;left:0");
 
             const width = 335;
             const height = 248;
@@ -135,15 +135,15 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
                 a = document.createElement("a");
                 a.href = url;
                 a.download = "card.png";
-                // a.click();
-                // a.remove();
-                // c.remove();
+                a.click();
+                a.remove();
+                c.remove();
                 setLoading(false);
             }
         }
         return () => {
-            // c?.remove();
-            // a?.remove();
+            c?.remove();
+            a?.remove();
         };
     }, [loading, imgLoading, QRCodeStatus, genderLoading]);
 

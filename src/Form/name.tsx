@@ -29,11 +29,13 @@ const Temp: React.FC<TempProps> = ({ handleChange }) => {
     /* <------------------------------------ **** STATE START **** ------------------------------------ */
     /************* This section will include this component HOOK function *************/
 
-    const [firstNameVisible, setFirstNameVisible] = useState(false);
-    const firstNameVisibleRef = useRef(false);
+    // const [firstNameVisible, setFirstNameVisible] = useState(false);
+    // const firstNameVisibleRef = useRef(false);
 
-    const [lastNameVisible, setLastNameVisible] = useState(false);
-    const lastNameVisibleRef = useRef(false);
+    // const [lastNameVisible, setLastNameVisible] = useState(false);
+    // const lastNameVisibleRef = useRef(false);
+
+    const [visible, setVisible] = useState(false);
 
     const firstNameVal = useRef<string>();
     const lastNameVal = useRef<string>();
@@ -47,44 +49,48 @@ const Temp: React.FC<TempProps> = ({ handleChange }) => {
     /************* This section will include this component general function *************/
 
     const handleValueChange = () => {
-        if (firstNameVisibleRef.current || lastNameVisibleRef.current) {
-            handleChange();
+        const arr = [lastNameVal.current, firstNameVal.current];
+
+        const englishReg = /^[a-z]+[.' ]*[a-z]*$/i;
+        let status = true;
+        for (let i = 0; i < arr.length; ) {
+            const value = arr[i];
+            if (value && (chineseReg.test(value) || englishReg.test(value)) && value.length < 50) {
+                ++i;
+            } else {
+                status = false;
+                i = arr.length;
+            }
+        }
+
+        if (status) {
+            setVisible(false);
+            handleChange({
+                first: firstNameVal.current ?? "",
+                last: lastNameVal.current ?? "",
+            });
             return;
         }
-        handleChange({
-            first: firstNameVal.current ?? "",
-            last: lastNameVal.current ?? "",
-        });
+        setVisible(true);
+        handleChange();
     };
 
     const handleLastNameBlur = (e: React.FocusEvent<HTMLInputElement>) => {
         const value = e.target.value.trim();
-        const englishReg = /^[a-z]+[.' ]*[a-z]*$/i;
-        if (value && (chineseReg.test(value) || englishReg.test(value)) && value.length < 50) {
-            lastNameVal.current = value;
-            lastNameVisibleRef.current = false;
-            setLastNameVisible(false);
-        } else {
-            lastNameVisibleRef.current = true;
-            lastNameVal.current = "";
-            setLastNameVisible(true);
-        }
+        lastNameVal.current = value;
+
         handleValueChange();
     };
 
     const handleFirstNameBlur = (e: React.FocusEvent<HTMLInputElement>) => {
         const value = e.target.value.trim();
-        const englishReg = /^[a-z]+[.' ]*[a-z]*$/i;
-        if (value && (chineseReg.test(value) || englishReg.test(value)) && value.length < 50) {
-            firstNameVal.current = value;
-            firstNameVisibleRef.current = false;
-            setFirstNameVisible(false);
-        } else {
-            firstNameVisibleRef.current = true;
-            firstNameVal.current = undefined;
-            setFirstNameVisible(true);
-        }
+        firstNameVal.current = value;
+
         handleValueChange();
+    };
+
+    const hiddenFn = () => {
+        setVisible(false);
     };
 
     /* <------------------------------------ **** FUNCTION END **** ------------------------------------ */
@@ -105,26 +111,17 @@ const Temp: React.FC<TempProps> = ({ handleChange }) => {
                         placeholder="姓氏"
                         className="lastName_ipt"
                         onBlur={handleLastNameBlur}
-                        onFocus={() => {
-                            lastNameVisibleRef.current = false;
-                            setLastNameVisible(false);
-                        }}
+                        onFocus={hiddenFn}
                     />
                     <input
                         type="text"
                         placeholder="名字"
                         className="firstName_ipt"
                         onBlur={handleFirstNameBlur}
-                        onFocus={() => {
-                            firstNameVisibleRef.current = false;
-                            setFirstNameVisible(false);
-                        }}
+                        onFocus={hiddenFn}
                     />
                 </DropdownBtn>
-                <DropdownContent
-                    bodyClassName="errorBody"
-                    show={firstNameVisible || lastNameVisible}
-                >
+                <DropdownContent bodyClassName="errorBody" show={visible}>
                     <Icon type="warning" className="errorIcon" />
                     请输入正确的姓名
                 </DropdownContent>
