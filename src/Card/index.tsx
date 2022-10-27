@@ -39,17 +39,20 @@ const Temp: React.FC<TempProps> = ({ isSmall, eventId, imgLoading, show }) => {
     const [month, setMonth] = useState<number | null>(null);
 
     const uuid = useMemo(() => {
-        const userId = comms.getRuntimeInfoNode("user_id") ?? "01GFWXVBBT553VVH1MBQRV4S9K";
+        const userId = comms.getRuntimeInfoNode("user_id") ?? "";
         let str = "";
         str += name?.last ? encode(name.last) : "";
         str += name?.first ? encode(name.first) : "";
         str += gender ?? "";
         str += year ? `${year}` : "";
         str += month ? `${month}` : "";
-        const value = `${userId}-${str}${Date.now()}`;
-        comms.state = value;
-        return value;
-    }, [gender, month, name, year]);
+        if (show) {
+            const value = `${userId}-${str}${Date.now()}`;
+            comms.state = value;
+            return value;
+        }
+        return "";
+    }, [gender, month, name, show, year]);
     /* <------------------------------------ **** STATE END **** ------------------------------------ */
     /* <------------------------------------ **** PARAMETER START **** ------------------------------------ */
     /************* This section will include this component parameter *************/
