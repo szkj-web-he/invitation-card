@@ -108,6 +108,7 @@ export const useDropdownClick = (
         };
 
         const touchStartFn = () => {
+            //移动端的点击事件有300ms的延时
             timer.current && window.clearTimeout(timer.current);
             timer.current = window.setTimeout(() => {
                 if (disableRef.current) {
@@ -131,7 +132,7 @@ export const useDropdownClick = (
                         capture: true,
                     },
                 );
-            });
+            }, 350);
         };
 
         if (

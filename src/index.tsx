@@ -21,6 +21,7 @@ import "./font.scss";
 import { useId } from "./Hooks/useId";
 import { useSmall } from "./Hooks/useSmall";
 import "./style.scss";
+import { ScrollComponent } from "./Components/Scroll";
 
 const Main: React.FC = () => {
     /* <------------------------------------ **** STATE START **** ------------------------------------ */
@@ -45,24 +46,32 @@ const Main: React.FC = () => {
 
     return (
         <div className="wrapper">
-            <div className={"main" + (isSmall ? " mobile" : " desk")}>
-                <Canvas
-                    isSmall={isSmall}
-                    isHalf={!show}
-                    setImgLoading={setImgLoading}
-                    imgLoading={imgLoading}
-                />
-                <Form
-                    submit={(res) => {
-                        setShow(res);
-                    }}
-                    eventId={`form${id}`}
-                    isSmall={isSmall}
-                />
-                {show && <div className={`line${isSmall ? " small" : ""}`} />}
+            <div className="before" />
+            <ScrollComponent className={`scrollWrap`}>
+                <div className={"main"}>
+                    <Canvas
+                        isSmall={isSmall}
+                        isHalf={!show}
+                        setImgLoading={setImgLoading}
+                        imgLoading={imgLoading}
+                    />
+                    <Form
+                        submit={(res) => {
+                            setShow(res);
+                        }}
+                        eventId={`form${id}`}
+                    />
+                    {show && <div className="line" />}
 
-                <Card eventId={`form${id}`} isSmall={isSmall} show={show} imgLoading={imgLoading} />
-            </div>
+                    <Card
+                        eventId={`form${id}`}
+                        isSmall={isSmall}
+                        show={show}
+                        imgLoading={imgLoading}
+                    />
+                </div>
+            </ScrollComponent>
+            <div className="after" />
         </div>
     );
 };

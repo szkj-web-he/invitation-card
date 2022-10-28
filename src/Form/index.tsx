@@ -23,10 +23,6 @@ interface TempProps {
      * 通讯密钥
      */
     eventId: string;
-    /**
-     *是否是小屏
-     */
-    isSmall: boolean;
 }
 
 interface SetNameData {
@@ -61,7 +57,7 @@ export interface FormProps {
 
 /* <------------------------------------ **** INTERFACE END **** ------------------------------------ */
 /* <------------------------------------ **** FUNCTION COMPONENT START **** ------------------------------------ */
-const Temp: React.FC<TempProps> = ({ submit, eventId, isSmall }) => {
+const Temp: React.FC<TempProps> = ({ submit, eventId }) => {
     /* <------------------------------------ **** STATE START **** ------------------------------------ */
     /************* This section will include this component HOOK function *************/
 
@@ -111,7 +107,7 @@ const Temp: React.FC<TempProps> = ({ submit, eventId, isSmall }) => {
 
     /* <------------------------------------ **** FUNCTION END **** ------------------------------------ */
     return (
-        <div className={`form_wrap${isSmall ? " form_smallWrap" : ""}`}>
+        <div className={`form_wrap`}>
             <Name
                 handleChange={(res) => {
                     setFormData({

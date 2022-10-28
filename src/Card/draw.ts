@@ -133,6 +133,12 @@ export const insertBirth = (
 /**
  * 插入描述
  */
+
+interface TextProps {
+    left: number;
+    value: string;
+    top: number;
+}
 export const insertDes = (ctx: CanvasRenderingContext2D, height: number, bottom: number): void => {
     ctx.globalAlpha = 1;
     ctx.font = "400 12px / 18px alipuhui";
@@ -140,11 +146,7 @@ export const insertDes = (ctx: CanvasRenderingContext2D, height: number, bottom:
     const arr = comms.config.question ?? "";
 
     let sum = 0;
-    const textData: Array<{
-        left: number;
-        value: string;
-        top: number;
-    }> = [];
+    const textData: Array<TextProps> = [];
 
     /**
      * 分割下标
@@ -156,14 +158,26 @@ export const insertDes = (ctx: CanvasRenderingContext2D, height: number, bottom:
      */
     let left = 40;
     const top = height - bottom;
-    let rowWidth = 0;
     ctx.textBaseline = "bottom";
     for (let i = 0; i < arr.length; i++) {
         const item = arr[i];
 
         const { width } = ctx.measureText(item);
-        sum += 0.5 + width;
-        left += i === 0 ? width : 0.5 + width;
+
+        let data = {
+            left,
+            top,
+            value: item,
+        };
+
+        if (i === 0) {
+            sum = width;
+        } else {
+            sum += 0.5 + width;
+        }
+
+        left += 0.5 + width;
+
         if (sum > 236) {
             const offset = (236 - (sum - 0.5 - width)) / 2;
             for (let j = 0; j < textData.length; j++) {
@@ -175,22 +189,20 @@ export const insertDes = (ctx: CanvasRenderingContext2D, height: number, bottom:
             }
             splitIndex = i;
             sum = width;
+
+            data = {
+                left: 40,
+                top,
+                value: item,
+            };
+
+            left = 40 + width + 0.5;
         }
 
-        if (i === splitIndex) {
-            rowWidth = width;
-            left = 40;
-        } else {
-            rowWidth += width + 0.5;
-        }
-        textData.push({
-            left,
-            top,
-            value: item,
-        });
+        textData.push(data);
 
         if (i === arr.length - 1) {
-            const offset = (236 - rowWidth) / 2;
+            const offset = (236 - sum) / 2;
             for (let j = splitIndex; j < textData.length; j++) {
                 textData[j].left += offset;
             }
@@ -272,48 +284,25 @@ export const drawRoundRectStroke = (
 
     // 右下
     ctx.arc(width - 11, height - 11, 10, 0, Math.PI / 2);
-    // if (isSmall) {
-    //     ctx.lineTo(11, height - 1);
-    // } else {
     ctx.lineTo(13, height - 1);
-    // }
     // 左下
-    // if (isSmall) {
-    //     ctx.arc(11, height - 11, 10, Math.PI / 2, Math.PI);
-    //     ctx.lineTo(1, 13);
-    // } else {
     ctx.moveTo(13, height);
     ctx.arc(0, height, 13, 0, (Math.PI / 2) * 3, true);
     ctx.moveTo(1, 13);
-    // }
+
     // 左上
     ctx.arc(0, 0, 13, Math.PI / 2, 0, true);
     ctx.moveTo(13, 1);
-    // if (isSmall) {
-    //     ctx.moveTo(width - 13, 1);
-    // } else {
     ctx.lineTo(width - 11, 1);
-    // }
+
     // 右上
-    // if (isSmall) {
-    //     ctx.arc(width, 0, 13, Math.PI, Math.PI / 2, true);
-    //     ctx.moveTo(width - 1, 13);
-    // } else {
     ctx.arc(width - 11, 11, 10, (Math.PI / 2) * 3, Math.PI * 2);
-    // }
     ctx.lineTo(width - 1, height - 11);
     ctx.stroke();
 
     ctx.strokeStyle = "#BDBDBD";
     ctx.lineWidth = 1;
     ctx.beginPath();
-    // if (isSmall) {
-    //     ctx.setLineDash([5, 4]);
-    //     ctx.moveTo(34, 0);
-    //     ctx.lineTo(width - 34, 0);
-    //     ctx.stroke();
-    //     return;
-    // }
     // 虚线
 
     ctx.setLineDash([5, 4]);

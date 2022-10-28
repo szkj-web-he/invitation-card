@@ -6,7 +6,10 @@ $fontFamily: alipuhui, sans-serif;
     z-index: 1;
     width: 387px;
     box-sizing: border-box;
-    &.form_smallWrap {
+}
+
+@media screen and (max-width: 720px) {
+    .form_wrap {
         padding: 24px 20px;
         width: 100%;
         height: 296px;
@@ -86,6 +89,18 @@ $fontFamily: alipuhui, sans-serif;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
     box-sizing: border-box;
     border-radius: 4px;
+}
+
+@media screen and (max-width: 720px) {
+    .genderDropDownList {
+        width: calc(355px - 40px);
+    }
+}
+
+@media screen and (max-width: 395px) {
+    .genderDropDownList {
+        width: calc(100vw - 40px * 2);
+    }
 }
 
 .dropdown_iptIcon {

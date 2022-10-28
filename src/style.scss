@@ -20,17 +20,21 @@ body {
 }
 
 .wrapper {
-    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column nowrap;
+}
+
+.before,
+.after {
+    flex: 1 1 auto;
 }
 
 .main {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
+    position: relative;
+    margin: 0 auto;
 
-.desk {
     width: 719px;
     height: 356px;
     display: flex;
@@ -39,10 +43,10 @@ body {
     flex-flow: row nowrap;
 }
 
-.mobile {
-    height: 544px;
-    width: 355px;
-    max-width: calc(100% - 40px);
+.scrollWrap {
+    flex: 0 0 auto;
+    max-height: 356px;
+    width: 100%;
 }
 
 .bg {
@@ -58,7 +62,21 @@ body {
     height: calc(100% - 32px * 2);
     position: relative;
     z-index: 2;
-    &.small {
+}
+
+@media screen and (max-width: 720px) {
+    .scrollWrap {
+        max-height: 544px;
+    }
+
+    .main {
+        display: block;
+        height: 544px;
+        width: 355px;
+        max-width: calc(100% - 40px);
+    }
+
+    .line {
         border-left: 0;
         width: calc(100% - 34px * 2);
         height: 0;
