@@ -34,20 +34,22 @@ export interface OffsetProps {
         | ((val: number, height: { triangle: number; root: number; kite: number }) => number);
 }
 
-interface MousedownEvent {
-    event: "mousedown";
-    id: string;
-}
-
 interface CustomChangeShowEvent {
     event: "changeShow";
     id: string;
 }
 
+interface ClickEvent {
+    event: "click" | "contextmenu";
+    id: string;
+    eventId: string;
+    todo: boolean;
+}
+
 interface MouseEvent {
-    event: "click" | "mouseenter" | "mouseleave" | "focus" | "blur" | "contextmenu";
+    event: "mouseenter" | "mouseleave" | "focus" | "blur";
     id: string;
     eventId: string;
 }
 
-export type CustomEventAction = MousedownEvent | MouseEvent | CustomChangeShowEvent;
+export type CustomEventAction = MouseEvent | CustomChangeShowEvent | ClickEvent;

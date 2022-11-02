@@ -97,12 +97,6 @@ $fontFamily: alipuhui, sans-serif;
     }
 }
 
-@media screen and (max-width: 395px) {
-    .genderDropDownList {
-        width: calc(100vw - 40px * 2);
-    }
-}
-
 .dropdown_iptIcon {
     font-size: 10px;
     color: #757575;

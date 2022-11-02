@@ -30,6 +30,9 @@ export const useDropdownClick = (
 
     const visibleRef = useRef(visible);
 
+    /**
+     * 是否可以添加全局点击事件
+     */
     const isClick = useMemo(() => {
         let status = false;
         for (const key in btnIsClick) {
@@ -59,6 +62,9 @@ export const useDropdownClick = (
         callbackRef.current = callback;
     }, [callback]);
 
+    /**
+     * 是否是手机端
+     */
     useLayoutEffect(() => {
         const fn = () => {
             setIsMobile(window.matchMedia("(any-pointer:coarse)").matches);
@@ -79,60 +85,17 @@ export const useDropdownClick = (
         };
     }, []);
 
+    /**
+     *
+     */
     useLayoutEffect(() => {
-        const mouseupFn = () => {
-            timer.current && window.clearTimeout(timer.current);
+        const clickFn = () => {
             timer.current = window.setTimeout(() => {
-                if (disableRef.current) {
+                if (destroy.current) {
                     return;
                 }
-
-                if (!visibleRef.current) {
-                    return;
-                }
-
-                document.addEventListener(
-                    "mouseup",
-                    () => {
-                        if (destroy.current) {
-                            return;
-                        }
-                        callbackRef.current();
-                    },
-                    {
-                        once: true,
-                        capture: true,
-                    },
-                );
+                callbackRef.current();
             });
-        };
-
-        const touchStartFn = () => {
-            //移动端的点击事件有300ms的延时
-            timer.current && window.clearTimeout(timer.current);
-            timer.current = window.setTimeout(() => {
-                if (disableRef.current) {
-                    return;
-                }
-
-                if (!visibleRef.current) {
-                    return;
-                }
-
-                document.addEventListener(
-                    "touchend",
-                    () => {
-                        if (destroy.current) {
-                            return;
-                        }
-                        callbackRef.current();
-                    },
-                    {
-                        once: true,
-                        capture: true,
-                    },
-                );
-            }, 350);
         };
 
         if (
@@ -142,15 +105,12 @@ export const useDropdownClick = (
             eventName?.includes("contextmenu") ||
             isClick
         ) {
-            if (isMobile) {
-                document.addEventListener("touchstart", touchStartFn, true);
-            } else {
-                document.addEventListener("mousedown", mouseupFn, true);
-            }
+            document.addEventListener("click", clickFn, true);
+            document.addEventListener("contextmenu", clickFn, true);
         }
         return () => {
-            document.removeEventListener("mousedown", mouseupFn, true);
-            document.addEventListener("touchstart", touchStartFn, true);
+            document.removeEventListener("click", clickFn, true);
+            document.addEventListener("contextmenu", clickFn, true);
         };
     }, [isClick, isMobile, eventId, eventName]);
 

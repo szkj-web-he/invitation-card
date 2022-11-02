@@ -58,7 +58,7 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
             delayOnShow,
             delayOnHide,
             changeVisibleFn,
-            onClick,
+            onClickCapture,
             onMouseEnter,
             onMouseLeave,
             onMouseDown,
@@ -119,6 +119,10 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
             delayOnHide ?? dropdownProps.delayOnHide,
         );
 
+        const hoverFnRef = useRef(hoverFn);
+
+        const oldBtnId = useRef<string>();
+
         const timer = useDropdownClick(
             visible,
             () => {
@@ -128,10 +132,6 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
             triggerVal,
             disableVal,
         );
-
-        const hoverFnRef = useRef(hoverFn);
-
-        const oldBtnId = useRef<string>();
 
         const transitionEndRef = useRef(true);
 
@@ -192,92 +192,104 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
             const fn = (e: Event) => {
                 const event = e as CustomEvent<CustomEventAction>;
                 const eventData = event.detail;
+
                 switch (eventData.event) {
                     case "focus":
-                        if (eventData.eventId === eventIdRef.current) {
-                            setActiveId(eventData.id);
-                            void hoverFnRef
-                                .current({
-                                    type: ActionType.UpdateBtnAction,
-                                    payload: true,
-                                })
-                                .then((res) => {
-                                    if (destroy.current) {
-                                        return;
-                                    }
-                                    setVisible(res);
-                                });
+                        if (eventData.eventId !== eventIdRef.current) {
+                            break;
                         }
+                        setActiveId(eventData.id);
+                        void hoverFnRef
+                            .current({
+                                type: ActionType.UpdateBtnAction,
+                                payload: true,
+                            })
+                            .then((res) => {
+                                if (destroy.current) {
+                                    return;
+                                }
+                                setVisible(res);
+                            });
+
                         break;
                     case "blur":
-                        if (eventData.eventId === eventIdRef.current) {
-                            void hoverFnRef
-                                .current({
-                                    type: ActionType.UpdateBtnAction,
-                                    payload: false,
-                                })
-                                .then((res) => {
-                                    if (destroy.current) {
-                                        return;
-                                    }
-                                    setVisible(res);
-                                });
+                        if (eventData.eventId !== eventIdRef.current) {
+                            break;
                         }
-                        break;
-                    case "mousedown":
-                        timer.current && window.clearTimeout(timer.current);
+                        void hoverFnRef
+                            .current({
+                                type: ActionType.UpdateBtnAction,
+                                payload: false,
+                            })
+                            .then((res) => {
+                                if (destroy.current) {
+                                    return;
+                                }
+                                setVisible(res);
+                            });
+
                         break;
                     case "click":
-                        if (eventData.eventId === eventIdRef.current) {
-                            setActiveId(eventData.id);
-                            if (eventData.id === oldBtnId.current) {
-                                setVisible((pre) => !pre);
-                            } else {
-                                oldBtnId.current = eventData.id;
-                                setVisible(true);
-                            }
+                        timer.current && window.clearTimeout(timer.current);
+
+                        if (eventData.eventId !== eventIdRef.current || !eventData.todo) {
+                            break;
+                        }
+
+                        setActiveId(eventData.id);
+                        if (eventData.id === oldBtnId.current) {
+                            setVisible((pre) => !pre);
+                        } else {
+                            oldBtnId.current = eventData.id;
+                            setVisible(true);
                         }
                         break;
                     case "mouseenter":
-                        if (eventData.eventId === eventIdRef.current) {
-                            setActiveId(eventData.id);
-                            void hoverFnRef
-                                .current({
-                                    type: ActionType.UpdateBtnAction,
-                                    payload: true,
-                                })
-                                .then((res) => {
-                                    if (destroy.current) {
-                                        return;
-                                    }
-                                    setVisible(res);
-                                });
+                        if (eventData.eventId !== eventIdRef.current) {
+                            break;
                         }
+                        setActiveId(eventData.id);
+                        void hoverFnRef
+                            .current({
+                                type: ActionType.UpdateBtnAction,
+                                payload: true,
+                            })
+                            .then((res) => {
+                                if (destroy.current) {
+                                    return;
+                                }
+                                setVisible(res);
+                            });
                         break;
                     case "mouseleave":
-                        if (eventData.eventId === eventIdRef.current) {
-                            void hoverFnRef
-                                .current({
-                                    type: ActionType.UpdateBtnAction,
-                                    payload: false,
-                                })
-                                .then((res) => {
-                                    if (destroy.current) {
-                                        return;
-                                    }
-                                    setVisible(res);
-                                });
+                        if (eventData.eventId !== eventIdRef.current) {
+                            break;
                         }
+                        void hoverFnRef
+                            .current({
+                                type: ActionType.UpdateBtnAction,
+                                payload: false,
+                            })
+                            .then((res) => {
+                                if (destroy.current) {
+                                    return;
+                                }
+                                setVisible(res);
+                            });
                         break;
                     case "contextmenu":
-                        if (eventData.eventId === eventIdRef.current) {
-                            setActiveId(eventData.id);
-                            if (eventData.id === oldBtnId.current) {
-                                setVisible((pre) => !pre);
-                            } else {
-                                oldBtnId.current = eventData.id;
-                                setVisible(true);
-                            }
+                        timer.current && window.clearTimeout(timer.current);
+
+                        if (eventData.eventId !== eventIdRef.current || !eventData.todo) {
+                            break;
+                        }
+
+                        setActiveId(eventData.id);
+                        if (eventData.id === oldBtnId.current) {
+                            setVisible((pre) => !pre);
+                        } else {
+                            oldBtnId.current = eventData.id;
+                            setVisible(true);
                         }
                         break;
                     case "changeShow":
@@ -294,10 +306,10 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
 
         useEffect(() => {
             destroy.current = false;
-            const timerValue = timer.current;
+            // const timerValue = timer.current;
             return () => {
                 destroy.current = true;
-                timerValue && window.clearTimeout(timerValue);
+                // timerValue && window.clearTimeout(timerValue);
             };
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []);
@@ -312,7 +324,7 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
             if (disableVal) {
                 return;
             }
-
+            timer.current && window.clearTimeout(timer.current);
             /**
              * 如果有自定义的展示状态
              * 则取消内部的交互
@@ -331,21 +343,6 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
                 hideOnClickVal
             ) {
                 setVisible(false);
-            }
-        };
-
-        const handleMouseDown = () => {
-            if (disableVal) {
-                return;
-            }
-
-            if (
-                triggerVal === "click" ||
-                triggerVal?.includes("click") ||
-                triggerVal === "contextmenu" ||
-                triggerVal?.includes("contextmenu")
-            ) {
-                timer.current && window.clearTimeout(timer.current);
             }
         };
 
@@ -451,13 +448,22 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
         };
 
         /* <------------------------------------ **** FUNCTION END **** ------------------------------------ */
+
         return (
             <Portal
                 show={visible}
                 isRemove={isRemove()}
                 direction={direction ?? dropdownProps.direction ?? "vertical"}
                 placement={placement ?? dropdownProps.placement ?? "cb"}
-                ref={ref}
+                ref={(el) => {
+                    // portalRef.current = el;
+
+                    if (typeof ref === "function") {
+                        ref(el);
+                    } else if (ref !== null) {
+                        (ref as React.MutableRefObject<HTMLElement | null>).current = el;
+                    }
+                }}
                 root={(activeId ? btn.current[activeId] : undefined) as Element | undefined}
                 handleTransitionEnd={transitionEndFn}
                 handleTransitionCancel={transitionEndFn}
@@ -465,8 +471,8 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
                 triangleOffset={triangle ?? dropdownProps.triangle}
                 portalOffset={offset ?? dropdownProps.offset}
                 mount={mount ?? dropdownProps.mount}
-                onClick={(e) => {
-                    onClick?.(e);
+                onClickCapture={(e) => {
+                    onClickCapture?.(e);
                     handleClick();
                 }}
                 onMouseEnter={(e) => {
@@ -479,7 +485,6 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
                 }}
                 onMouseDown={(e) => {
                     onMouseDown?.(e);
-                    handleMouseDown();
                 }}
                 onFocus={(e) => {
                     onFocus?.(e);

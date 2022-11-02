@@ -6,15 +6,7 @@
  */
 /* <------------------------------------ **** DEPENDENCE IMPORT START **** ------------------------------------ */
 /** This section will include all the necessary dependence for this tsx file */
-import React, {
-    forwardRef,
-    memo,
-    useEffect,
-    useLayoutEffect,
-    useLayoutEffect,
-    useRef,
-    useState,
-} from "react";
+import React, { forwardRef, memo, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ActionType, useCssTransition } from "../../../Transition/Hooks/useCssTransition";
 import { setStyle } from "../../../Transition/Transition/Unit/addStyle";
@@ -659,6 +651,7 @@ const Temp = forwardRef<HTMLDivElement, TempProps>(
             }
             return arr.join(" ") + (className ? ` ${className}` : "");
         };
+
         /* <------------------------------------ **** FUNCTION END **** ------------------------------------ */
         if (isRemove) {
             return <></>;

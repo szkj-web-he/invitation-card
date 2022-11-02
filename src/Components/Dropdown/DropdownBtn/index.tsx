@@ -69,6 +69,7 @@ export const DropdownBtn = forwardRef<HTMLDivElement, DropdownBtnProps>(
             disable,
             hoverId,
             focusId,
+            onMouseUp,
             clickId,
             contextmenuId,
             ...props
@@ -138,19 +139,18 @@ export const DropdownBtn = forwardRef<HTMLDivElement, DropdownBtnProps>(
                 return;
             }
 
-            if (isCustom(show)) {
-                /**
-                 * 如果有自定义的展示状态
-                 * 则取消内部的交互
-                 */
-                return;
-            }
             if (triggerValue === "click" || triggerValue?.includes("click")) {
                 const event = new CustomEvent(eventName, {
                     detail: {
                         event: "click",
                         id,
                         eventId: clickId,
+                        //是否做内部的交互
+                        /**
+                         * 如果有自定义的展示状态
+                         * 则取消内部的交互
+                         */
+                        todo: !isCustom(show),
                     },
                 });
                 document.dispatchEvent(event);
@@ -275,14 +275,6 @@ export const DropdownBtn = forwardRef<HTMLDivElement, DropdownBtnProps>(
                 return;
             }
 
-            /**
-             * 如果有自定义的展示状态
-             * 则取消内部的交互
-             */
-            if (isCustom(show)) {
-                return;
-            }
-
             if (triggerValue === "contextmenu" || triggerValue?.includes("contextmenu")) {
                 e.preventDefault();
                 const event = new CustomEvent(eventName, {
@@ -290,33 +282,12 @@ export const DropdownBtn = forwardRef<HTMLDivElement, DropdownBtnProps>(
                         event: "contextmenu",
                         id,
                         eventId: contextmenuId,
-                    },
-                });
-                document.dispatchEvent(event);
-            }
-        };
-
-        /**
-         * 这里是做全局点击事件的判断
-         * 是否点击到了dropdown btn和dropdown content的判断
-         *
-         * 利用事件的前后顺序来取消不必要的判断
-         */
-        const handleMouseDown = () => {
-            if (disableVal) {
-                return;
-            }
-
-            if (
-                triggerValue === "click" ||
-                triggerValue?.includes("click") ||
-                triggerValue === "contextmenu" ||
-                triggerValue?.includes("contextmenu")
-            ) {
-                const event = new CustomEvent(eventName, {
-                    detail: {
-                        event: "mousedown",
-                        id,
+                        //是否做内部的交互
+                        /**
+                         * 如果有自定义的展示状态
+                         * 则取消内部的交互
+                         */
+                        todo: !isCustom(show),
                     },
                 });
                 document.dispatchEvent(event);
@@ -348,7 +319,9 @@ export const DropdownBtn = forwardRef<HTMLDivElement, DropdownBtnProps>(
                 }}
                 onMouseDown={(e) => {
                     onMouseDown?.(e);
-                    handleMouseDown();
+                }}
+                onMouseUp={(e) => {
+                    onMouseUp?.(e);
                 }}
                 onFocus={(e) => {
                     onFocus?.(e);
