@@ -1,6 +1,5 @@
 import { ConfigYML, PluginComms } from "@possie-engine/dr-plugin-sdk";
 import Form from "./Form";
-import VConsole from "vconsole";
 export const comms = new PluginComms({
     defaultConfig: new ConfigYML(),
 }) as {
@@ -23,8 +22,6 @@ import { useId } from "./Hooks/useId";
 import { useSmall } from "./Hooks/useSmall";
 import "./style.scss";
 import { ScrollComponent } from "./Components/Scroll";
-
-new VConsole();
 
 const Main: React.FC = () => {
     /* <------------------------------------ **** STATE START **** ------------------------------------ */
