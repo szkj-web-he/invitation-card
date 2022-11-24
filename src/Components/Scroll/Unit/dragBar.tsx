@@ -7,7 +7,7 @@
 /* <------------------------------------ **** DEPENDENCE IMPORT START **** ------------------------------------ */
 /** This section will include all the necessary dependence for this tsx file */
 import React, { forwardRef, useRef } from "react";
-import { getScrollValue } from "../../Dropdown/Kite/Unit/getScrollValue";
+import { getScrollValue } from "../../Kite/Unit/getScrollValue";
 import { Point } from "./type";
 /* <------------------------------------ **** DEPENDENCE IMPORT END **** ------------------------------------ */
 /* <------------------------------------ **** INTERFACE START **** ------------------------------------ */

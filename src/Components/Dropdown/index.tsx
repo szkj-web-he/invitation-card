@@ -7,7 +7,7 @@
 /* <------------------------------------ **** DEPENDENCE IMPORT START **** ------------------------------------ */
 /** This section will include all the necessary dependence for this tsx file */
 import React, { createContext, useContext, useRef, useState } from "react";
-import { useId } from "../../../Hooks/useId";
+import { useId } from "../../Hooks/useId";
 import { OffsetProps, Placement, TriangleProps, TriggerProps } from "../Unit/type";
 /* <------------------------------------ **** DEPENDENCE IMPORT END **** ------------------------------------ */
 /* <------------------------------------ **** INTERFACE START **** ------------------------------------ */
@@ -140,13 +140,15 @@ export interface DropdownProps extends MainProps {
 }
 /* <------------------------------------ **** INTERFACE END **** ------------------------------------ */
 
-type DropdownPropsType = Omit<DropdownProps, "children"> & { eventName: string };
+const DropdownPropsContext = createContext<Omit<DropdownProps, "children"> & { eventName: string }>(
+    {
+        eventName: "",
+    },
+);
 
-const DropdownPropsContext = createContext<DropdownPropsType>({
-    eventName: "",
-});
-
-export const useDropdownPropsContext = (): DropdownPropsType => useContext(DropdownPropsContext);
+export const useDropdownPropsContext = (): Omit<DropdownProps, "children"> & {
+    eventName: string;
+} => useContext(DropdownPropsContext);
 
 export interface ItemProps {
     clickId?: string;

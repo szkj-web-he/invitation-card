@@ -4,10 +4,10 @@
  * @author xuejie.he
  * @lastModify xuejie.he 2022-09-09
  */
-import React, { useEffect, useInsertionEffect, useRef } from "react";
-import { useMobile } from "../../Scroll/Unit/useMobile";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { findReactElementFromDoms, includeElsProps } from "../Kite/Unit/findDomNode";
 import { GlobalClick } from "../Kite/Unit/type";
+import { useMobile } from "../Scroll/Unit/useMobile";
 
 /**
  *
@@ -24,11 +24,11 @@ export const useGlobalClick = (
     const rootEl = useRef(root);
     const isMobile = useMobile();
 
-    useInsertionEffect(() => {
+    useLayoutEffect(() => {
         callbackFn.current = callback;
     }, [callback]);
 
-    useInsertionEffect(() => {
+    useLayoutEffect(() => {
         rootEl.current = root;
     }, [root]);
 

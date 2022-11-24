@@ -9,7 +9,7 @@
 import React, { forwardRef, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { DropdownProps, useDropdownContext } from "../Dropdown";
 import { useDropdownClick } from "../Hooks/useDropdownClick";
-import Portal from "../Kite/Unit/position";
+import Portal from "../Portal";
 import { CustomEventAction } from "../Unit/type";
 import { useDropdownPropsContext } from "./../Dropdown/index";
 import { ActionType, useHover } from "./../Hooks/useHover";
@@ -133,23 +133,6 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
             disableVal,
         );
 
-        const transitionEndRef = useRef(true);
-
-        /**
-         * 旧的展示状态
-         */
-        const oldShow = useRef<boolean>();
-        /**
-         * 过渡状态
-         *
-         */
-        const [, setTransitionEnd] = useState(true);
-
-        /**
-         * 可见的次数
-         */
-        const count = useRef(0);
-
         /**
          * 监听 局部的show和全局的show
          */
@@ -193,40 +176,38 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
                 const event = e as CustomEvent<CustomEventAction>;
                 const eventData = event.detail;
 
+                const hoverFnParams = (res: boolean) => {
+                    return {
+                        value: res,
+                        callback: (res: boolean) => {
+                            if (destroy.current) {
+                                return;
+                            }
+                            setVisible(res);
+                        },
+                    };
+                };
+
                 switch (eventData.event) {
                     case "focus":
                         if (eventData.eventId !== eventIdRef.current) {
                             break;
                         }
                         setActiveId(eventData.id);
-                        void hoverFnRef
-                            .current({
-                                type: ActionType.UpdateBtnAction,
-                                payload: true,
-                            })
-                            .then((res) => {
-                                if (destroy.current) {
-                                    return;
-                                }
-                                setVisible(res);
-                            });
+                        void hoverFnRef.current({
+                            type: ActionType.UpdateBtnAction,
+                            payload: hoverFnParams(true),
+                        });
 
                         break;
                     case "blur":
                         if (eventData.eventId !== eventIdRef.current) {
                             break;
                         }
-                        void hoverFnRef
-                            .current({
-                                type: ActionType.UpdateBtnAction,
-                                payload: false,
-                            })
-                            .then((res) => {
-                                if (destroy.current) {
-                                    return;
-                                }
-                                setVisible(res);
-                            });
+                        void hoverFnRef.current({
+                            type: ActionType.UpdateBtnAction,
+                            payload: hoverFnParams(false),
+                        });
 
                         break;
                     case "click":
@@ -249,33 +230,19 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
                             break;
                         }
                         setActiveId(eventData.id);
-                        void hoverFnRef
-                            .current({
-                                type: ActionType.UpdateBtnAction,
-                                payload: true,
-                            })
-                            .then((res) => {
-                                if (destroy.current) {
-                                    return;
-                                }
-                                setVisible(res);
-                            });
+                        void hoverFnRef.current({
+                            type: ActionType.UpdateBtnAction,
+                            payload: hoverFnParams(true),
+                        });
                         break;
                     case "mouseleave":
                         if (eventData.eventId !== eventIdRef.current) {
                             break;
                         }
-                        void hoverFnRef
-                            .current({
-                                type: ActionType.UpdateBtnAction,
-                                payload: false,
-                            })
-                            .then((res) => {
-                                if (destroy.current) {
-                                    return;
-                                }
-                                setVisible(res);
-                            });
+                        void hoverFnRef.current({
+                            type: ActionType.UpdateBtnAction,
+                            payload: hoverFnParams(false),
+                        });
                         break;
                     case "contextmenu":
                         timer.current && window.clearTimeout(timer.current);
@@ -313,6 +280,23 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
             };
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []);
+
+        /**
+         * use hover dispatch的callback
+         * @param status
+         * @returns
+         */
+        const hoverFnParams = (status: boolean) => {
+            return {
+                value: status,
+                callback: (res: boolean) => {
+                    if (destroy.current) {
+                        return;
+                    }
+                    setVisible(res);
+                },
+            };
+        };
 
         /**
          * 下拉列表内容不做右击事件
@@ -354,12 +338,7 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
             if (triggerVal === "hover" || triggerVal?.includes("hover")) {
                 void hoverFn({
                     type: ActionType.UpdateContentAction,
-                    payload: true,
-                }).then((res) => {
-                    if (destroy.current) {
-                        return;
-                    }
-                    setVisible(res);
+                    payload: hoverFnParams(true),
                 });
             }
         };
@@ -372,12 +351,7 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
             if (triggerVal === "hover" || triggerVal?.includes("hover")) {
                 void hoverFn({
                     type: ActionType.UpdateContentAction,
-                    payload: false,
-                }).then((res) => {
-                    if (destroy.current) {
-                        return;
-                    }
-                    setVisible(res);
+                    payload: hoverFnParams(false),
                 });
             }
         };
@@ -390,12 +364,7 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
             if (triggerVal === "focus" || triggerVal?.includes("focus")) {
                 void hoverFn({
                     type: ActionType.UpdateContentAction,
-                    payload: true,
-                }).then((res) => {
-                    if (destroy.current) {
-                        return;
-                    }
-                    setVisible(res);
+                    payload: hoverFnParams(true),
                 });
             }
         };
@@ -407,44 +376,9 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
             if (triggerVal === "focus" || triggerVal?.includes("focus")) {
                 void hoverFn({
                     type: ActionType.UpdateContentAction,
-                    payload: false,
-                }).then((res) => {
-                    if (destroy.current) {
-                        return;
-                    }
-                    setVisible(res);
+                    payload: hoverFnParams(false),
                 });
             }
-        };
-
-        const isRemove = () => {
-            if (removeOnHide ?? dropdownProps.removeOnHide) {
-                if (cache ?? dropdownProps.cache) {
-                    if (!visible && !count.current && transitionEndRef.current) {
-                        return true;
-                    }
-                } else if (!visible && transitionEndRef.current) {
-                    return true;
-                }
-            }
-            return false;
-        };
-
-        /**
-         * 这里做次数判断
-         */
-        if (visible !== oldShow.current) {
-            if (visible) {
-                ++count.current;
-            }
-            transitionEndRef.current = false;
-            setTransitionEnd(false);
-            oldShow.current = visible;
-        }
-
-        const transitionEndFn = () => {
-            setTransitionEnd(true);
-            transitionEndRef.current = true;
         };
 
         /* <------------------------------------ **** FUNCTION END **** ------------------------------------ */
@@ -452,12 +386,11 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
         return (
             <Portal
                 show={visible}
-                isRemove={isRemove()}
                 direction={direction ?? dropdownProps.direction ?? "vertical"}
                 placement={placement ?? dropdownProps.placement ?? "cb"}
+                removeOnHidden={removeOnHide ?? dropdownProps.removeOnHide ?? true}
+                cache={cache ?? dropdownProps.cache ?? true}
                 ref={(el) => {
-                    // portalRef.current = el;
-
                     if (typeof ref === "function") {
                         ref(el);
                     } else if (ref !== null) {
@@ -465,11 +398,9 @@ export const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
                     }
                 }}
                 root={(activeId ? btn.current[activeId] : undefined) as Element | undefined}
-                handleTransitionEnd={transitionEndFn}
-                handleTransitionCancel={transitionEndFn}
-                animation={animate ?? dropdownProps.animate}
-                triangleOffset={triangle ?? dropdownProps.triangle}
-                portalOffset={offset ?? dropdownProps.offset}
+                animate={animate ?? dropdownProps.animate}
+                triangle={triangle ?? dropdownProps.triangle}
+                offset={offset ?? dropdownProps.offset}
                 mount={mount ?? dropdownProps.mount}
                 onClickCapture={(e) => {
                     onClickCapture?.(e);

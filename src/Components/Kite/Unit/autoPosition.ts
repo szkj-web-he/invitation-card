@@ -459,48 +459,6 @@ export const main = (): ((res: AutoPositionProps) => AutoPositionResult) => {
     };
 
     /**
-     * 下拉框的起点
-     * @param {boolean} reverse 是否反转
-     * @returns {[number,number]} [x,y]
-     */
-    // const originPoint = (reverse: boolean): [number, number] | undefined => {
-    //     const data = staticData as StaticProps;
-    //     if (!data) {
-    //         return;
-    //     }
-    //     let x = 0;
-    //     let y = 0;
-
-    //     switch (data.direction) {
-    //         case "horizontal":
-    //             y = data.btnRect.top + data.scrollY;
-    //             if (data.placement.startsWith("l")) {
-    //                 x = reverse
-    //                     ? data.btnRect.left + data.btnRect.width + data.scrollX
-    //                     : data.btnRect.left + data.scrollX;
-    //             } else {
-    //                 x = reverse
-    //                     ? data.btnRect.left + data.scrollX
-    //                     : data.btnRect.left + data.btnRect.width + data.scrollX;
-    //             }
-    //             break;
-    //         case "vertical":
-    //             x = data.btnRect.left + data.scrollX;
-    //             if (data.placement.endsWith("t")) {
-    //                 y = reverse
-    //                     ? data.btnRect.top + data.btnRect.height + data.scrollY
-    //                     : data.btnRect.top + data.scrollY;
-    //             } else {
-    //                 y = reverse
-    //                     ? data.btnRect.top + data.scrollY
-    //                     : data.btnRect.top + data.btnRect.height + data.scrollY;
-    //             }
-    //             break;
-    //     }
-    //     return [x, y];
-    // };
-
-    /**
      * 定位位置的入口
      */
     function autoPosition({

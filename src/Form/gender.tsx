@@ -7,9 +7,9 @@
 /* <------------------------------------ **** DEPENDENCE IMPORT START **** ------------------------------------ */
 /** This section will include all the necessary dependence for this tsx file */
 import React, { useState } from "react";
-import { Dropdown } from "../Components/Dropdown/Dropdown";
-import { DropdownBtn } from "../Components/Dropdown/DropdownBtn";
-import { DropdownContent } from "../Components/Dropdown/DropdownContent";
+import { Dropdown } from "../Components/Dropdown";
+import { DropdownBtn } from "../Components/DropdownBtn";
+import { DropdownContent } from "../Components/DropdownContent";
 import { Icon } from "../Components/Icon";
 /* <------------------------------------ **** DEPENDENCE IMPORT END **** ------------------------------------ */
 /* <------------------------------------ **** INTERFACE START **** ------------------------------------ */

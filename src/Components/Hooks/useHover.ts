@@ -5,9 +5,7 @@
  * @lastModify xuejie.he 2022-10-07
  */
 
-import { useLayoutEffect, useRef } from "react";
-import { useCallback } from "react";
-import { useEffect } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 
 export enum ActionType {
     UpdateBtnAction = "UPDATEBTN",
@@ -16,25 +14,23 @@ export enum ActionType {
 
 type UpdateBtnAction = {
     type: ActionType.UpdateBtnAction;
-    payload: boolean;
+    payload: {
+        value: boolean;
+        callback: (status: boolean) => void;
+    };
 };
 
 type UpdateContentAction = {
     type: ActionType.UpdateContentAction;
-    payload: boolean;
+    payload: {
+        value: boolean;
+        callback: (status: boolean) => void;
+    };
 };
 
 type HoverAction = UpdateBtnAction | UpdateContentAction;
 
-export interface ObjectDOMRect {
-    readonly height: number;
-    readonly width: number;
-}
-
-export const useHover = (
-    delayOnShow = 150,
-    delayOnHide = 150,
-): ((action: HoverAction) => Promise<boolean>) => {
+export const useHover = (delayOnShow = 150, delayOnHide = 150): ((res: HoverAction) => void) => {
     /**
      * btn的状态
      * 是否被hover、focus
@@ -66,27 +62,26 @@ export const useHover = (
     }, []);
 
     return useCallback((action: HoverAction) => {
-        const switchStatus = () => {
-            return new Promise<boolean>((resolve) => {
-                timer.current =
-                    btnStatus.current || contentStatus.current
-                        ? window.setTimeout(() => {
-                              resolve(true);
-                          }, delayOnShowRef.current)
-                        : window.setTimeout(() => {
-                              resolve(false);
-                          }, delayOnHideRef.current);
-            });
+        const switchStatus = (callback: (status: boolean) => void) => {
+            timer.current && window.clearTimeout(timer.current);
+            timer.current =
+                btnStatus.current || contentStatus.current
+                    ? window.setTimeout(() => {
+                          callback(true);
+                      }, delayOnShowRef.current)
+                    : window.setTimeout(() => {
+                          callback(false);
+                      }, delayOnHideRef.current);
         };
 
         switch (action.type) {
             case ActionType.UpdateBtnAction:
-                btnStatus.current = action.payload;
+                btnStatus.current = action.payload.value;
                 break;
             case ActionType.UpdateContentAction:
-                contentStatus.current = action.payload;
+                contentStatus.current = action.payload.value;
                 break;
         }
-        return switchStatus();
+        switchStatus(action.payload.callback);
     }, []);
 };

@@ -8,6 +8,7 @@
 export const getTriangle = (container: HTMLElement, className: string): HTMLElement | null => {
     const { children } = container;
     let element: HTMLElement | null = null;
+
     for (let i = 0; i < children.length; ) {
         const el = children[i] as HTMLElement;
         const classVal = el.getAttribute("class");

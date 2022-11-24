@@ -5,7 +5,7 @@
  * @lastModify xuejie.he 2022-10-20
  */
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { useDropdownContext } from "../Dropdown";
 import { TriggerProps } from "../Unit/type";
 
@@ -17,8 +17,6 @@ export const useDropdownClick = (
     disable?: boolean,
 ): React.MutableRefObject<number | null> => {
     const { btnIsClick } = useDropdownContext();
-
-    const [isMobile, setIsMobile] = useState(window.matchMedia("(any-pointer:coarse)").matches);
 
     const timer = useRef<number | null>(null);
 
@@ -62,21 +60,6 @@ export const useDropdownClick = (
         callbackRef.current = callback;
     }, [callback]);
 
-    /**
-     * 是否是手机端
-     */
-    useLayoutEffect(() => {
-        const fn = () => {
-            setIsMobile(window.matchMedia("(any-pointer:coarse)").matches);
-        };
-        if (isClick) {
-            window.addEventListener("resize", fn);
-        }
-        return () => {
-            window.removeEventListener("resize", fn);
-        };
-    }, [isClick]);
-
     useEffect(() => {
         destroy.current = false;
         return () => {
@@ -110,9 +93,9 @@ export const useDropdownClick = (
         }
         return () => {
             document.removeEventListener("click", clickFn, true);
-            document.addEventListener("contextmenu", clickFn, true);
+            document.removeEventListener("contextmenu", clickFn, true);
         };
-    }, [isClick, isMobile, eventId, eventName]);
+    }, [isClick, eventId, eventName]);
 
     return timer;
 };

@@ -7,10 +7,10 @@
 /* <------------------------------------ **** DEPENDENCE IMPORT START **** ------------------------------------ */
 /** This section will include all the necessary dependence for this tsx file */
 import React, { forwardRef, useEffect, useLayoutEffect, useMemo, useRef } from "react";
-import { useId } from "../../../Hooks/useId";
-import { deepCloneData } from "../../Unit/deepCloneData";
+import { useId } from "../../Hooks/useId";
 import { useDropdownPropsContext } from "../Dropdown";
 import { isCustom } from "../DropdownContent/Unit/isCustom";
+import { deepCloneData } from "../Unit/deepCloneData";
 import { TriggerProps } from "../Unit/type";
 import { useDropdownContext } from "./../Dropdown/index";
 /* <------------------------------------ **** DEPENDENCE IMPORT END **** ------------------------------------ */

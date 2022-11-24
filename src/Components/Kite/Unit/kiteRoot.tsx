@@ -7,9 +7,8 @@
 /* <------------------------------------ **** DEPENDENCE IMPORT START **** ------------------------------------ */
 /** This section will include all the necessary dependence for this tsx file */
 import React, { Fragment, isValidElement, useLayoutEffect, useRef, useState } from "react";
-import "../style.scss";
+import "../../Portal/style.scss";
 import { findDomFn } from "./findDomNode";
-import { useLayoutEffect } from "react";
 
 /* <------------------------------------ **** DEPENDENCE IMPORT END **** ------------------------------------ */
 /* <------------------------------------ **** INTERFACE START **** ------------------------------------ */
