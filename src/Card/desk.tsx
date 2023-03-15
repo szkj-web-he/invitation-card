@@ -118,7 +118,12 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
                     bottom + 8,
                 );
                 //插入描述
-                insertDes(ctx, height, 17);
+                insertDes(
+                    ctx,
+                    height,
+                    17,
+                    document.getElementsByClassName("deskCard_des")[0].textContent ?? "",
+                );
 
                 const url = c.toDataURL("image/png");
 

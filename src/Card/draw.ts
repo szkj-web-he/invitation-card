@@ -1,5 +1,3 @@
-import { comms } from "..";
-
 /**
  * 画圆角矩形
  */
@@ -139,15 +137,19 @@ interface TextProps {
     value: string;
     top: number;
 }
-export const insertDes = (ctx: CanvasRenderingContext2D, height: number, bottom: number): void => {
+export const insertDes = (
+    ctx: CanvasRenderingContext2D,
+    height: number,
+    bottom: number,
+    textStr: string,
+): void => {
     ctx.globalAlpha = 1;
     ctx.font = "400 12px / 18px alipuhui";
     ctx.fillStyle = "#BDBDBD";
-    const arr = comms.config.question ?? "";
 
     let sum = 0;
     const textData: Array<TextProps> = [];
-
+    const arr = textStr.split("");
     /**
      * 分割下标
      */

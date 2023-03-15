@@ -1,4 +1,4 @@
-import { ConfigYML, PluginComms } from "@possie-engine/dr-plugin-sdk";
+import { ConfigYML, PluginComms } from "@datareachable/dr-plugin-sdk";
 import Form from "./Form";
 export const comms = new PluginComms({
     defaultConfig: new ConfigYML(),

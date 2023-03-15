@@ -1,5 +1,5 @@
 # The question text can be modified by the survey owner.
-question: "谢谢参与本次的活动，请查收您的邀请确认函。我们期待您的到访！"
+question: "<div>谢谢参与本次的活动，请查收您的邀请确认函。我们期待您的到访！</div>"
 # The instructions to the question can be modified by the survey owner. It's recommended that the existing instructions are included in the customised instructions.
 instruction: "请通过移动滑块进行打分"
 # For the purposes of reproducing a bug
