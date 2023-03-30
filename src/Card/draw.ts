@@ -132,88 +132,249 @@ export const insertBirth = (
  * 插入描述
  */
 
-interface TextProps {
-    left: number;
+interface TextPointProps {
+    /**
+     * 文字
+     */
     value: string;
-    top: number;
+    /**
+     * x轴
+     */
+    left: number;
+    /**
+     * 第几行
+     */
+    row: number;
+    /**
+     * 文字style
+     */
+    font: string;
+    /**
+     * 文字颜色
+     */
+    color: string;
+    /**
+     * 文字宽度
+     */
+    width: number;
+    /**
+     * 右坐标
+     */
+    right: number;
+    /**
+     * 行高
+     */
+    lineHeight: number;
 }
-export const insertDes = (
+
+/**
+ * 获取文字的某些样式
+ */
+const getStyleData = (el: Element) => {
+    const styleData = window.getComputedStyle(el, null);
+
+    const lineHeight = styleData.lineHeight;
+
+    return {
+        font: `${styleData.fontWeight} ${styleData.fontSize} / ${lineHeight} ${styleData.fontFamily}`,
+        color: styleData.color,
+        lineHeight: Number(lineHeight.replace(/[^0-9.]/g, "")),
+    };
+};
+
+const mapFont = (
+    texts: string,
+    fontStyle: ReturnType<typeof getStyleData>,
+    container: Array<TextPointProps>,
     ctx: CanvasRenderingContext2D,
-    height: number,
-    bottom: number,
-    textStr: string,
-): void => {
-    ctx.globalAlpha = 1;
-    ctx.font = "400 12px / 18px alipuhui";
-    ctx.fillStyle = "#BDBDBD";
-
-    let sum = 0;
-    const textData: Array<TextProps> = [];
-    const arr = textStr.split("");
+    lineHeights: Array<number>,
+    rowNum: { current: number },
+    width: number,
+    margin: number,
+) => {
     /**
-     * 分割下标
+     * 最大宽度
      */
-    let splitIndex = 0;
-
+    const startLeft = margin;
+    const maxRight = width - margin;
     /**
-     * 初始位置
+     * 文字间隔为0.5px
      */
-    let left = 40;
-    const top = height - bottom;
-    ctx.textBaseline = "bottom";
-    for (let i = 0; i < arr.length; i++) {
-        const item = arr[i];
+    const letterSpace = 0.5;
 
-        const { width } = ctx.measureText(item);
+    let maxHeight = lineHeights[rowNum.current] ?? 0;
 
-        let data = {
-            left,
-            top,
-            value: item,
-        };
+    for (let i = 0; i < texts.length; i++) {
+        const text = texts[i];
 
-        if (i === 0) {
-            sum = width;
+        const lastFont = container.length ? container[container.length - 1] : null;
+        let left = lastFont ? lastFont.right + letterSpace : startLeft;
+        ctx.font = fontStyle.font;
+        const width = Math.round(ctx.measureText(text).width * 100) / 100;
+        if (left + width > maxRight) {
+            /**
+             * 赋值
+             */
+            lineHeights[rowNum.current] = maxHeight;
+
+            /**
+             * 重置
+             */
+            left = startLeft;
+            ++rowNum.current;
+            maxHeight = fontStyle.lineHeight;
         } else {
-            sum += 0.5 + width;
+            maxHeight = maxHeight >= fontStyle.lineHeight ? maxHeight : fontStyle.lineHeight;
         }
 
-        left += 0.5 + width;
+        const right = left + width;
 
-        if (sum > 236) {
-            const offset = (236 - (sum - 0.5 - width)) / 2;
-            for (let j = 0; j < textData.length; j++) {
-                textData[j].top -= 18;
-            }
+        container.push({
+            value: text,
+            left,
+            row: rowNum.current,
+            width,
+            right,
+            ...fontStyle,
+        });
 
-            for (let j = splitIndex; j < textData.length; j++) {
-                textData[j].left += offset;
-            }
-            splitIndex = i;
-            sum = width;
-
-            data = {
-                left: 40,
-                top,
-                value: item,
-            };
-
-            left = 40 + width + 0.5;
-        }
-
-        textData.push(data);
-
-        if (i === arr.length - 1) {
-            const offset = (236 - sum) / 2;
-            for (let j = splitIndex; j < textData.length; j++) {
-                textData[j].left += offset;
-            }
+        if (i === texts.length - 1) {
+            /**
+             * 如果是最后一条
+             * 赋值
+             */
+            lineHeights[rowNum.current] = maxHeight;
         }
     }
+};
 
-    for (let i = 0; i < textData.length; i++) {
-        const item = textData[i];
-        ctx.fillText(item.value, item.left, item.top);
+/**
+ * 设置文字的点位信息
+ */
+const setFontPoints = (
+    el: Element,
+    container: Array<TextPointProps>,
+    ctx: CanvasRenderingContext2D,
+    lineHeights: Array<number>,
+    rowNum: { current: number },
+    width: number,
+    margin: number,
+) => {
+    const childList = el.childNodes;
+
+    for (let i = 0; i < childList.length; i++) {
+        const item = childList[i];
+        if (item instanceof Text && item.textContent) {
+            const fontStyle = getStyleData(el);
+            mapFont(
+                item.textContent,
+                fontStyle,
+                container,
+                ctx,
+                lineHeights,
+                rowNum,
+                width,
+                margin,
+            );
+        } else if (item instanceof Element) {
+            setFontPoints(item, container, ctx, lineHeights, rowNum, width, margin);
+        }
+    }
+};
+
+export const insertDes = (ctx: CanvasRenderingContext2D, bottom: number, el: HTMLElement): void => {
+    const { width, height } = ctx.canvas;
+    //
+    /**
+     * 文字坐标
+     */
+    const fontPoints: Array<TextPointProps> = [];
+
+    /**
+     * 每行的最大高度
+     */
+    const lineHeight: Array<number> = [];
+
+    /**
+     * 第几行
+     */
+    const rowNum = { current: 0 };
+
+    /**
+     * 文字两边边距
+     */
+    const margin = 40;
+    setFontPoints(el, fontPoints, ctx, lineHeight, rowNum, width, margin);
+
+    /**
+     * 最大宽度
+     */
+
+    /**
+     * 最后一行的下标
+     * 如果是最后一行需要知道
+     * 它这一行的总宽度
+     * 并居中
+     */
+    /**
+     * 最后一行的下标
+     */
+    const lastIndex = lineHeight.length - 1;
+
+    const endRight = fontPoints[fontPoints.length - 1].right;
+
+    /**
+     * 最后一行的左偏移值
+     */
+
+    const marginLeft = (width - (endRight - margin)) / 2;
+    /**
+     * end
+     */
+
+    /**
+     * 设置每一行的高度
+     */
+    let startBottom = height - bottom;
+    /**
+     * 每行的点位
+     */
+    const lineHeightPoints: Array<{ value: number; top: number }> = [];
+
+    for (let i = lineHeight.length - 1; i >= 0; i--) {
+        const item = lineHeight[i];
+
+        lineHeightPoints.unshift({
+            top: startBottom - item,
+            value: item,
+        });
+        /**
+         * 5为行间距
+         */
+        startBottom -= item - 5;
+    }
+
+    ctx.globalAlpha = 1;
+    for (let i = 0; i < fontPoints.length; i++) {
+        const fontItem = fontPoints[i];
+        ctx.font = fontItem.font;
+        ctx.fillStyle = fontItem.color;
+
+        /**
+         * 获取top值
+         */
+        const lineHeightData = lineHeightPoints[fontItem.row];
+        const marginTop = lineHeightData.value - fontItem.lineHeight;
+        const top = lineHeightData.top + marginTop;
+
+        /**
+         * 获取left值
+         */
+        let left = fontItem.left;
+        if (lastIndex === fontItem.row) {
+            left = marginLeft + (fontItem.left - margin);
+        }
+        ctx.fillText(fontItem.value, left, top);
     }
 };
 

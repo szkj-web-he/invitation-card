@@ -130,9 +130,8 @@ const Temp: React.FC<TempProps> = ({ uuid, imgLoading, name, gender, birth }) =>
                 //插入描述
                 insertDes(
                     ctx,
-                    height,
                     16,
-                    document.getElementsByClassName("smallCard_des")[0].textContent ?? "",
+                    document.getElementsByClassName("smallCard_des")[0] as HTMLElement,
                 );
 
                 const url = c.toDataURL("image/png");

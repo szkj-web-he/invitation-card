@@ -75,6 +75,13 @@ $fontFamily: alipuhui, sans-serif;
     bottom: 17px;
     width: 100%;
     box-sizing: border-box;
+    word-wrap: break-word;
+    word-break: break-all;
+    * {
+        text-decoration: none !important;
+        font-style: normal !important;
+        background-color: transparent !important;
+    }
 }
 
 .eye_wrap {
