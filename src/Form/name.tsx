@@ -12,11 +12,13 @@ import { DropdownBtn } from "../Components/DropdownBtn";
 import { DropdownContent } from "../Components/DropdownContent";
 import { Icon } from "../Components/Icon";
 import { chineseReg } from "../Unit/encode";
+import { useEffect } from "react";
 /* <------------------------------------ **** DEPENDENCE IMPORT END **** ------------------------------------ */
 /* <------------------------------------ **** INTERFACE START **** ------------------------------------ */
 /** This section will include all the interface for this tsx file */
 interface TempProps {
     handleChange: (res?: NameProps) => void;
+    value?: NameProps;
 }
 
 export interface NameProps {
@@ -25,7 +27,7 @@ export interface NameProps {
 }
 /* <------------------------------------ **** INTERFACE END **** ------------------------------------ */
 /* <------------------------------------ **** FUNCTION COMPONENT START **** ------------------------------------ */
-const Temp: React.FC<TempProps> = ({ handleChange }) => {
+const Temp: React.FC<TempProps> = ({ handleChange, value }) => {
     /* <------------------------------------ **** STATE START **** ------------------------------------ */
     /************* This section will include this component HOOK function *************/
 
@@ -40,9 +42,22 @@ const Temp: React.FC<TempProps> = ({ handleChange }) => {
     const firstNameVal = useRef<string>();
     const lastNameVal = useRef<string>();
 
+    const lastRef = useRef<HTMLInputElement | null>(null);
+    const firstRef = useRef<HTMLInputElement | null>(null);
+
     /* <------------------------------------ **** STATE END **** ------------------------------------ */
     /* <------------------------------------ **** PARAMETER START **** ------------------------------------ */
     /************* This section will include this component parameter *************/
+
+    useEffect(() => {
+        if (lastRef.current) {
+            lastRef.current.value = value?.last ?? "";
+        }
+
+        if (firstRef.current) {
+            firstRef.current.value = value?.first ?? "";
+        }
+    }, [value]);
 
     /* <------------------------------------ **** PARAMETER END **** ------------------------------------ */
     /* <------------------------------------ **** FUNCTION START **** ------------------------------------ */
@@ -112,6 +127,7 @@ const Temp: React.FC<TempProps> = ({ handleChange }) => {
                         className="lastName_ipt"
                         onBlur={handleLastNameBlur}
                         onFocus={hiddenFn}
+                        ref={lastRef}
                     />
                     <input
                         type="text"
@@ -119,6 +135,7 @@ const Temp: React.FC<TempProps> = ({ handleChange }) => {
                         className="firstName_ipt"
                         onBlur={handleFirstNameBlur}
                         onFocus={hiddenFn}
+                        ref={firstRef}
                     />
                 </DropdownBtn>
                 <DropdownContent bodyClassName="errorBody" show={visible}>

@@ -10,7 +10,7 @@ import React, { useLayoutEffect, useMemo, useState } from "react";
 import { comms } from "..";
 import { FormProps } from "../Form";
 import { addZero } from "../Unit/addZero";
-import { encode, getStateData } from "../Unit/encode";
+import { encode } from "../Unit/encode";
 import { NameProps } from "./../Form/name";
 import Desk from "./desk";
 import Mobile from "./mobile";
@@ -29,30 +29,21 @@ const Temp: React.FC<TempProps> = ({ isSmall, eventId, imgLoading, show }) => {
     /* <------------------------------------ **** STATE START **** ------------------------------------ */
     /************* This section will include this component HOOK function *************/
     const [name, setName] = useState<NameProps | null>(() => {
-        const data = getStateData();
-        return data
-            ? {
-                  first: data.firName,
-                  last: data.lastName,
-              }
-            : null;
+        return null;
     });
     /**
      * X是男
      * Y是女
      */
     const [gender, setGender] = useState<"X" | "Y" | null>(() => {
-        const data = getStateData();
-        return data?.gender ? (data.gender as "X" | "Y") : null;
+        return null;
     });
 
     const [year, setYear] = useState<number | null>(() => {
-        const data = getStateData();
-        return data?.year ? Number(data.year) : null;
+        return null;
     });
     const [month, setMonth] = useState<number | null>(() => {
-        const data = getStateData();
-        return data?.month ? Number(data.month) : null;
+        return null;
     });
 
     const uuid = useMemo(() => {

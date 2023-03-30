@@ -13,15 +13,19 @@ import { DropdownContent } from "../Components/DropdownContent";
 import { Icon } from "../Components/Icon";
 import { ScrollComponent } from "../Components/Scroll";
 import { monthList } from "../defualtData";
+import { useEffect } from "react";
 /* <------------------------------------ **** DEPENDENCE IMPORT END **** ------------------------------------ */
 /* <------------------------------------ **** INTERFACE START **** ------------------------------------ */
 /** This section will include all the interface for this tsx file */
 interface TempProps {
     handleChange: (year: number, month: number) => void;
+
+    year?: number;
+    month?: number;
 }
 /* <------------------------------------ **** INTERFACE END **** ------------------------------------ */
 /* <------------------------------------ **** FUNCTION COMPONENT START **** ------------------------------------ */
-const Temp: React.FC<TempProps> = ({ handleChange }) => {
+const Temp: React.FC<TempProps> = ({ handleChange, year: y, month: m }) => {
     /* <------------------------------------ **** STATE START **** ------------------------------------ */
     /************* This section will include this component HOOK function *************/
 
@@ -38,12 +42,18 @@ const Temp: React.FC<TempProps> = ({ handleChange }) => {
 
     const [openMonth, setOpenMonth] = useState(false);
 
-    const [year, setYear] = useState<number>();
-    const [month, setMonth] = useState<number>();
+    const [year, setYear] = useState(y);
+    const [month, setMonth] = useState(m);
 
     /* <------------------------------------ **** STATE END **** ------------------------------------ */
     /* <------------------------------------ **** PARAMETER START **** ------------------------------------ */
     /************* This section will include this component parameter *************/
+    useEffect(() => {
+        setYear(y);
+    }, [y]);
+    useEffect(() => {
+        setMonth(m);
+    }, [m]);
 
     /* <------------------------------------ **** PARAMETER END **** ------------------------------------ */
     /* <------------------------------------ **** FUNCTION START **** ------------------------------------ */

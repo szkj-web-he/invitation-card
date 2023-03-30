@@ -16,15 +16,15 @@ import { Icon } from "../Components/Icon";
 /** This section will include all the interface for this tsx file */
 interface TempProps {
     handleChange: (res: "X" | "Y") => void;
+    value?: "X" | "Y";
 }
 /* <------------------------------------ **** INTERFACE END **** ------------------------------------ */
 /* <------------------------------------ **** FUNCTION COMPONENT START **** ------------------------------------ */
-const Temp: React.FC<TempProps> = ({ handleChange }) => {
+const Temp: React.FC<TempProps> = ({ handleChange, value }) => {
     /* <------------------------------------ **** STATE START **** ------------------------------------ */
     /************* This section will include this component HOOK function *************/
     const [open, setOpen] = useState(false);
 
-    const [value, setValue] = useState<string>();
     /* <------------------------------------ **** STATE END **** ------------------------------------ */
     /* <------------------------------------ **** PARAMETER START **** ------------------------------------ */
     /************* This section will include this component parameter *************/
@@ -48,16 +48,14 @@ const Temp: React.FC<TempProps> = ({ handleChange }) => {
                     <div
                         className={`dropDownItem${value === "X" ? " active" : ""}`}
                         onClick={() => {
-                            setValue("X");
                             handleChange("X");
                         }}
                     >
                         男
                     </div>
                     <div
-                        className={`dropDownItem${value === "y" ? " active" : ""}`}
+                        className={`dropDownItem${value === "Y" ? " active" : ""}`}
                         onClick={() => {
-                            setValue("Y");
                             handleChange("Y");
                         }}
                     >
